@@ -8,20 +8,28 @@ module.exports = {
 	async run(client, message, args) {
 		let col = args[0];
 		if (!col) return message.channel.send(`${client.config.emoji.err} You need to provide a valid hex color code. Make sure you use the correct format: \`${message.guild.prefix}rolecolor [hex color]\``)
-		let hex;
-		if (!col.startsWith("#")) {
-			hex = "#" + col;
+		args[0] = args[0].replace(/#+/g, '');
+		let color = args[0];
+		let len = args[0].length - 6;
+		let x = args[0].slice(0, -len);
+		if (!color.startsWith('#')) {
+			color = `#${args[0]}`;
 		} else {
-			hex = col;
+			color = args[0];
 		};
+		if (args[0].length > 6 && !args[0].startsWith("#")) {
+			color = `#${x}`
+		} else if (args[0].length > 6) {
+			color = x;
+		}
 		let id = await client.db.get('role' + message.author.id);
 		if (!id) return message.channel.send(`${client.config.emoji.err} You don't own a custom role! \`${message.guild.prefix}myrole\``);
 		let role = message.guild.roles.cache.get(id);
 		if (!role) return message.channel.send(`${client.config.emoji.err} I cannot find your custom role!`)
 		let regex = new RegExp("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
-		result = regex.test(hex);
+		result = regex.test(color);
 		if(result == true) {
-			role.setColor(hex);
+			role.setColor(color);
 		return message.channel.send("", {
 			embed: new Discord.MessageEmbed()
 			.setDescription(`${client.config.emoji.tick} Color for role ${role} was successfully changed to **${col}**`)

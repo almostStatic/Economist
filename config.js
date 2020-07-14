@@ -24,11 +24,11 @@ module.exports = {
 			cdAmt = Number(cdAmt);
 			let expirationTime = lastUsed + cdAmt;
 			if (now < expirationTime) {
-				let mins = Math.round((expirationTime - now) / 60000);
+				let mins = new Date(expirationTime - now).getMinutes();
 				let hrs = new Date(expirationTime - now).getHours();
 				return {
-					hrs: hrs.toFixed(0),
-					mins: mins % 60,
+					hrs: hrs,
+					mins: mins,
 				};//"You need to wait {hrs} hours and {mins} minutes before using that command again!"
 			};
 		 return;
@@ -43,8 +43,9 @@ module.exports = {
 	'530606911326912522', 
 		'315311485738024960', "676123066165624866"],
 		owner: '501710994293129216',
+		x: 1594726151239,
 		channels: {
-			bug: '723558118780567642',
+			bug: '731890869313208341',
 			general: "706845689413369907",
 			ready: "706845762117566514",
 			reconnecting: "706845762117566514",
@@ -55,6 +56,7 @@ module.exports = {
 			modlog: "719912989184229458",
 		},
 		roles: {
+			businessman: "728236365183188993",
 			updates: '722475705056624690',
 			db: '719604560607314001',
 			nerd: '706928601936953477',

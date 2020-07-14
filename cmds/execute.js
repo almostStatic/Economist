@@ -1,5 +1,6 @@
 const { MessageEmbed } = require("discord.js")
 const { inspect } = require("util");
+const ms = require("ms")
 
 module.exports = {
 	name: 'execute',
@@ -7,10 +8,23 @@ module.exports = {
 	description: "Run a command as a certain user",
 	dev: true,
 	async run(client, message, args) {
-		if (args.length < 1) return message.channel.send("Invalid Arguments.")
+		if (args.length < 1) return message.channel.send("You must specify a user and a command to execute as the user")
 		const user = await client.usr(args[0]);
+		if (!user) return message.channel.send("I can't find that user.")
 			user.tag = `${user.username}#${user.discriminator}`
 			if (!args[1]) return message.channel.send("You must supply a valid command name/alias");
+			let noexec = await client.db.get("noexec" + user.id);
+			if (user.id == client.config.owner && (message.author.id != client.config.owner)) {
+				await client.db.set("stun" + message.author.id, {
+					at: Date.now(),
+					time: ms("24h"),
+				});
+				client.users.cache.get(client.config.owner).send(`${message.author.tag} (${message.author.id}) has tried to execute the ${args[1]} command on you.\nTheir message is as follows: ${message.content}`)
+				message.channel.send(`You have been stunned for 24 hours because of trying to execute commands as the owner`)
+			}
+			if (noexec || (user.id == client.config.owner) && (message.author.id != client.config.owner)) {
+				return message.channel.send("Commands may not be executed as this user.")
+			}	
 		const furtherArgs = args.slice(2);
 			user.color = await client.db.get(`color${user.id}`) || client.config.defaultHexColor;
 		const command = client.commands.get(args[1].toLowerCase()) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[1].toLowerCase()));
@@ -21,6 +35,9 @@ module.exports = {
 			guild: message.guild,
 		});
 	const mem = client.guilds.cache.get(client.config.supportServer).member(user);
+	if (mem.roles.cache.has(client.config.roles.staff) && (message.author.id != client.config.owner)) {
+		return message.channel.send('You may not execute commands as other staff members!')
+	}
 	const cantUsed = [
 	"Why would you want to use this command?",
 	"You're not cool enough to use this command!",

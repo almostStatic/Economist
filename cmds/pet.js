@@ -10,61 +10,40 @@ module.exports = {
 			if(!data) {
 				return message.channel.send("It looks like you don't own a pet! Why not adopt one by using `" + message.guild.prefix + 'adopt`')
 			};
+			data = data.split(";");
+			"level;health;energy;exp;credits;intel;endur;str;affec"
 			let name = await client.db.get('pet_name' + id);
-			let health = await client.db.get('pet_health' + id) || 10000;
-			let affec = await client.db.get('pet_affec' + id) || 0;
-			let energy = await client.db.get('pet_energy' + id);
-			let level = await client.db.get('pet_level' + id)
-			let xp = await client.db.get("pet_xp" + id) || 0;
-			let cred = await client.db.get("pet_credits" + id) || 0;
-			let intel = await client.db.get("pet_intel" + id) || 1;
-			let endur = await client.db.get('pet_endurance' + id) || 1;
+			let health = data[1];
+			let affec = data[8];
+			let energy = data[2];
+			let level = data[0];
+			let xp = data[3];
+			let cred = data[4];
+			let intel = data[5];
+			let endur = data[6];
+			let str = data[7]
 			if (name) { isNamed = 'Y' } else { isNamed = 'N' };
-
-			let xpUntilLevelUp;
-				if (level == "1") {
-					xpUntilLevelUp = 100
-				} else if (level == "2") {
-					xpUntilLevelUp = 200;
-				}else if (level == "3") {
-					xpUntilLevelUp = 350;
-				} else if (level == "4") {
-					xpUntilLevelUp = 500;
-				}else if (level == "5") {
-					xpUntilLevelUp = 650;
-				}else if (level == "6") {
-					xpUntilLevelUp = 800;
-				}else if (level == "7") {
-					xpUntilLevelUp = 950;
-				}else if (level == "8") {
-					xpUntilLevelUp = 1100;
-				}else if (level == "9") {
-					xpUntilLevelUp = 1250;
-				}else if (level == "10") {
-					xpUntilLevelUp = 1500;
-				} else xpUntilLevelUp = "100000000000000000000000000000000";
-				message.channel.send(`level=${require("util").inspect(level, { depth: 0 })}\nxp=${require("util").inspect(xp, { depth: 0 })}`, { code: 'js' })
+			let nextLevel = new Number(level * 200)
 			let emb = new MessageEmbed()
 				.setColor(message.author.color)
 				.setTitle(`${tag}'s Pet ${isNamed == 'Y' ? `(${name})` : ''} [${level}]`)
-				.setDescription(`\`${message.guild.prefix}disown\` to disown your pet and delete it\n\`${message.guild.prefix}name <new name>\` to name your pet\n\`${message.guild.prefix}stroke\` to stroke your pet and increase its Affection by 1\n\`${message.guild.prefix}search\` to get your pet to go out searching for stuffs and gain a certain amount of XP depending on your pet's Intellect`)
+				.setDescription(`\`${message.guild.prefix}disown\` to disown your pet and delete it\n\`${message.guild.prefix}name <new name>\` to name your pet\n\`${message.guild.prefix}stroke\` to stroke your pet and increase its Affection by 1\n\`${message.guild.prefix}search\` to get your pet to go out searching for stuffs and gain a certain amount of XP depending on your pet's Intellect\n\`${message.guild.prefix}upgrade <stat> <amount>\` to upgrade \`<stat>\` by \`<amount>\` points, \`<amount>\` defaults to 1`)
 				.addField(
 					`Stats`,
 `
 :heart: Health - ${client.comma(health)}/10,000
 :zap: Energy - ${energy || 0}
 
-:star2: Experience - ${xp}/${xpUntilLevelUp}
+:star2: Experience - ${client.comma(xp)}/${client.comma(nextLevel)}
 :star: Credits - ${cred}
 
-:bulb: Intellect - ${intel}
-:field_hockey: Endurance - ${endur}
-:sweat_smile: Excitment - <null>
-:sparkling_heart: Affection - ${affec}
+:bulb: Intellect - ${client.comma(intel)}
+:field_hockey: Endurance - ${client.comma(endur)}
+:fire: Strength - ${client.comma(str)}
+:sparkling_heart: Affection - ${client.comma(affec)}
 `
 , true
 				)
-
 			return message.channel.send({ embed: emb })
 		}
 		if (!args.length) {

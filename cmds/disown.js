@@ -12,14 +12,6 @@ module.exports = {
 		message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] }).then(async(c) => {
 			if (c.first().content.toLowerCase().startsWith("y")) {
 		await client.db.delete('pet' + message.author.id);
-		await client.db.delete('pet_health' + message.author.id);
-		await client.db.delete('pet_affec' + message.author.id);
-		await client.db.delete('pet_energy' + message.author.id);
-		await client.db.delete('pet_level' + message.author.id);
-		await client.db.delete("pet_xp" + message.author.id);
-		await client.db.delete("pet_level" + message.author.id)
-		await client.db.delete("pet_name" + message.author.id);
-		await client.db.delete("pet_endurance" + message.author.id);
 			return message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)

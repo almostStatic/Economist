@@ -1,0 +1,329 @@
+
+{
+  "header": {
+    "reportVersion": 2,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20200627.122517.2246.0.001.json",
+    "dumpEventTime": "2020-06-27T12:25:17Z",
+    "dumpEventTimeStamp": "1593260717021",
+    "processId": 2246,
+    "threadId": null,
+    "cwd": "/home/runner/Economist",
+    "commandLine": [
+      "node",
+      "/run_dir/interp.js",
+      "index.js"
+    ],
+    "nodejsVersion": "v12.16.3",
+    "glibcVersionRuntime": "2.24",
+    "glibcVersionCompiler": "2.17",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.16.3",
+      "v8": "7.8.279.23-node.35",
+      "uv": "1.34.2",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.16.0",
+      "modules": "72",
+      "nghttp2": "1.40.0",
+      "napi": "5",
+      "llhttp": "2.0.4",
+      "http_parser": "2.9.3",
+      "openssl": "1.1.1g",
+      "cldr": "36.0",
+      "icu": "65.1",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.16.3/node-v12.16.3-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.16.3/node-v12.16.3.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "5.4.0-1009-gcp",
+    "osVersion": "#9-Ubuntu SMP Fri Apr 10 19:12:03 UTC 2020",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel(R) Xeon(R) CPU @ 2.30GHz",
+        "speed": 2300,
+        "user": 99310600,
+        "nice": 180000,
+        "sys": 47658600,
+        "idle": 269236800,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU @ 2.30GHz",
+        "speed": 2300,
+        "user": 98851900,
+        "nice": 291400,
+        "sys": 47779700,
+        "idle": 269460200,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU @ 2.30GHz",
+        "speed": 2300,
+        "user": 95883100,
+        "nice": 184300,
+        "sys": 47976800,
+        "idle": 271980500,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU @ 2.30GHz",
+        "speed": 2300,
+        "user": 94475700,
+        "nice": 198000,
+        "sys": 48530000,
+        "idle": 271542300,
+        "irq": 0
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "eth0",
+        "internal": false,
+        "mac": "02:42:ac:12:00:3c",
+        "address": "172.18.0.60",
+        "netmask": "255.255.0.0",
+        "family": "IPv4"
+      }
+    ],
+    "host": "1db57dfbcd1d"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x0000000000b46955",
+      "symbol": "report::TriggerNodeReport(v8::Isolate*, node::Environment*, char const*, char const*, std::string const&, v8::Local<v8::String>) [node]"
+    },
+    {
+      "pc": "0x0000000000a09c8f",
+      "symbol": "node::OnFatalError(char const*, char const*) [node]"
+    },
+    {
+      "pc": "0x0000000000b7d71e",
+      "symbol": "v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [node]"
+    },
+    {
+      "pc": "0x0000000000b7da99",
+      "symbol": "v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [node]"
+    },
+    {
+      "pc": "0x0000000000d2a1f5",
+      "symbol": " [node]"
+    },
+    {
+      "pc": "0x0000000000d2a886",
+      "symbol": "v8::internal::Heap::RecomputeLimits(v8::internal::GarbageCollector) [node]"
+    },
+    {
+      "pc": "0x0000000000d37105",
+      "symbol": "v8::internal::Heap::PerformGarbageCollection(v8::internal::GarbageCollector, v8::GCCallbackFlags) [node]"
+    },
+    {
+      "pc": "0x0000000000d37fb5",
+      "symbol": "v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [node]"
+    },
+    {
+      "pc": "0x0000000000d3aa6c",
+      "symbol": "v8::internal::Heap::AllocateRawWithRetryOrFail(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [node]"
+    },
+    {
+      "pc": "0x0000000000d0163b",
+      "symbol": "v8::internal::Factory::NewFillerObject(int, bool, v8::internal::AllocationType, v8::internal::AllocationOrigin) [node]"
+    },
+    {
+      "pc": "0x000000000104300e",
+      "symbol": "v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [node]"
+    },
+    {
+      "pc": "0x00000000013c5b79",
+      "symbol": " [node]"
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 1083228160,
+    "totalCommittedMemory": 1081098912,
+    "usedMemory": 1077249392,
+    "availableMemory": 19307352,
+    "memoryLimit": 1098907648,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 33088,
+        "capacity": 32808,
+        "used": 32808,
+        "available": 0
+      },
+      "new_space": {
+        "memorySize": 4718592,
+        "committedMemory": 3437232,
+        "capacity": 2356776,
+        "used": 1368552,
+        "available": 988224
+      },
+      "old_space": {
+        "memorySize": 1075191808,
+        "committedMemory": 1074919136,
+        "capacity": 1073993560,
+        "used": 1073710696,
+        "available": 282864
+      },
+      "code_space": {
+        "memorySize": 430080,
+        "committedMemory": 317056,
+        "capacity": 247552,
+        "used": 247552,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 1314816,
+        "committedMemory": 1081680,
+        "capacity": 636160,
+        "used": 636160,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 1261568,
+        "committedMemory": 1261568,
+        "capacity": 1250840,
+        "used": 1250840,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 49152,
+        "committedMemory": 49152,
+        "capacity": 2784,
+        "used": 2784,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 2356776,
+        "used": 0,
+        "available": 2356776
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 35.6257,
+    "kernelCpuSeconds": 1.85341,
+    "cpuConsumptionPercent": 104.109,
+    "maxRss": 1158615040,
+    "pageFaults": {
+      "IORequired": 9,
+      "IONotRequired": 304046
+    },
+    "fsActivity": {
+      "reads": 1872,
+      "writes": 2096
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 10.7097,
+    "kernelCpuSeconds": 0.483742,
+    "cpuConsumptionPercent": 31.093,
+    "fsActivity": {
+      "reads": 1872,
+      "writes": 0
+    }
+  },
+  "libuv": [
+  ],
+  "workers": [
+  ],
+  "environmentVariables": {
+    "NODE_VERSION": "12.16.3",
+    "HOSTNAME": "1db57dfbcd1d",
+    "YARN_VERSION": "1.22.4",
+    "HOME": "/home/runner",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "NODE_PATH": "/usr/local/lib/node_modules:/home/runner/node_modules",
+    "PWD": "/home/runner",
+    "REPL_ID": "3e7ecad0-288a-468d-8299-93b1c9df0156",
+    "REPL_LANGUAGE": "nodejs",
+    "REPL_SLUG": "Economist",
+    "REPL_OWNER": "almostStatic",
+    "TERM": "xterm-256color",
+    "token": "NjcxNzA4NzY3ODEzMTA3NzI0.XvcUmg.KAgVoI8dOpYuzX2HYJOsqyvbfb4"
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 512,
+      "hard": 512
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": "unlimited"
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "linux-vdso.so.1",
+    "/lib/x86_64-linux-gnu/libdl.so.2",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+    "/lib/x86_64-linux-gnu/libm.so.6",
+    "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+    "/lib/x86_64-linux-gnu/libpthread.so.0",
+    "/lib/x86_64-linux-gnu/libc.so.6",
+    "/lib64/ld-linux-x86-64.so.2",
+    "/home/runner/Economist/node_modules/sqlite3/lib/binding/node-v72-linux-x64/node_sqlite3.node",
+    "/lib/x86_64-linux-gnu/libnss_files.so.2",
+    "/lib/x86_64-linux-gnu/libnss_dns.so.2",
+    "/lib/x86_64-linux-gnu/libresolv.so.2"
+  ]
+}

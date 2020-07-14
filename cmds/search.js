@@ -8,30 +8,36 @@ module.exports = {
 	async run(client, message, args) {
 		let pet = await client.db.get("pet" + message.author.id);
 		if (!pet) return message.channel.send(`You must have a pet in order to use this command.`)
+				"level;health;energy;exp;credits;intel;endur;str;affec"
 		async function upgradePet() {
-			let cred = await client.db.get(`pet_credits${message.author.id}`) || 0;
-				if (isNaN(cred)) cred = 0;
-			let newCred = Number(cred + 2);
-			let lvl = await client.db.get(`pet_level${message.author.id}`) || 1;
-				lvl = Number(lvl) + 1;
-			let p = await client.db.get("pet_name" + message.author.id) || 'pet';
-			await client.db.set(`pet_credits${message.author.id}`, newCred);
+			let data = await client.db.get(`pet${message.author.id}`);
+			data = data.split(';')
+				lvl = Number(data[0])
+		let p = await client.db.get("pet_name" + message.author.id) || 'pet';
 			message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
-				.setDescription(`${message.author.tag}'s ${p} has gotten lucky and gained :star: 2; ${p} is now level ${lvl}`)
+				.setDescription(`${message.author.tag}'s ${p} has gotten lucky and gained :star: 2; ${p} is now level ${lvl + 1}`)
 			});
-			await client.db.set(`pet_level${message.author.id}`, lvl);
+			let cred = Number(data[4]);
+				if (isNaN(cred)) cred = 0;
+			data[4] = Number(cred + 2);
+			data[0] = lvl + 1;
+			await client.db.set("pet" + message.author.id, data.join(';'))			
 		}
-		let en = await client.db.get("pet_energy" + message.author.id);
-		if (!en) {
-			en = 0;
-		}
-		en = Number(en);
-		let endur = await client.db.get("pet_endurance" + message.author.id) || 1;
-		let lvl = await client.db.get("pet_level" + message.author.id) || 1;
-		let xp = await client.db.get(`pet_xp` + message.author.id) || 0;
-		let intel = await client.db.get("pet_intel" + message.author.id) || 1;
+		let cd = await client.db.get("searchc" + message.author.id);
+		if (cd) return message.channel.send("You can only search once every 25 seconds!");
+		await client.db.set("searchc" + message.author.id, 1, 25*1000)
+		let data = await client.db.get("pet" + message.author.id)
+		data = data.split(";")
+		if (!data) return message.channel.send("You must own a pet in order to use this command! See `" + message.guild.prefix + "shop` for more information")
+				"level;health;energy;exp;credits;intel;endur;str;affec"
+				console.log(data)
+		let en = Number(data[2]);
+		let endur = Number(data[6]);
+		let lvl = Number(data[0])
+		let xp = Number(data[3])
+		let intel = Number(data[5]);
 		let consumed = Math.round(100 / (endur >= 4 ? endur : 3));
 		const fishes = [':dolphin:',':shark:',':blowfish:',':tropical_fish:',':fish:'];		
 		const fish = fishes[Math.floor(Math.random() * fishes.length)];
@@ -39,16 +45,19 @@ module.exports = {
 		let oldAmt = await client.db.get(`${fish}${message.author.id}`) || 0;
 		oldAmt = parseInt(oldAmt) || 0;
 		let xpGained = Math.floor( 
-			Math.random() * (intel ^ 50) / 2
-		) * 2;
+			Math.random() * (intel * 10)
+		) * 4;
 		let pn = await client.db.get(`pet_name${message.author.id}`) || "pet"
 		if (endur < 4) {
 			consumed = 35;
 		}
+		console.log(en-consumed)
+		console.log("en=",en)
+		console.log("consumed=",consumed)
 		if (en - consumed < 0) {
-			return message.channel.send("I'm too tired to go searching :-(")
+			return message.channel.send(":yawn: I'm too tired to go searching...")
 		};
-		await client.db.set(`pet_energy${message.author.id}`, Number(en - consumed))
+		data[2] = en - consumed;
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
@@ -80,22 +89,19 @@ module.exports = {
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`${message.author.tag}'s ${pn} has caught ${fish} ${amtGained} and obtained :star2: ${xpGained}`)
+			.setDescription(`${message.author.tag}'s ${pn} has caught ${fish} ${amtGained} and obtained :star2: ${client.comma(xpGained)}`)
 		});
 		};
-		await client.db.set(`pet_xp` + message.author.id, parseInt(xp + xpGained));
+		data[3] = xp + xpGained;
+		await client.db.set(`pet` + message.author.id, data.join(";"));
+		//see amount of times bot leveled up
+		//create loop of level up seq
 		let XP = Number(xp + xpGained)
-		console.log(xp, typeof xp)
-		message.channel.send(`lvl=${require("util").inspect(lvl, { depth: 0 })}\nxp=${require("util").inspect(xp, { depth: 0 })}\ntotal_xp=${require("util").inspect(XP, { depth: 0 })}`, { code: 'js' })
-		if (XP > 100 && (Number(lvl) == 1)) {
-			await upgradePet()
-				.catch(console.error);
-		} else if (XP > 250 && (Number(lvl) == 2)) {
-			await upgradePet()
-		} else if (XP > 400 && (Number(lvl) == 2)) {
-			await upgradePet()
-		}else if (XP > 550 && (Number(lvl) == 2)) {
-			await upgradePet()
+		const amount = Math.floor(XP / 200);
+		if (amount > lvl) {
+			for (i=0;i<amount-lvl;i++) {
+				await upgradePet();
+			}
 		}
 	},
 }

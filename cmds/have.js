@@ -6,7 +6,7 @@ module.exports = {
 	dev: true,
 	description: "See the users who have a specific permission",
 	async run (client, message, args) {
-		if (!args.length) return message.channel.send("That isn't a valid permission! The different types of valid permissions are: `db`, `ner`, `civ`, `admin`, `tri`, `mod`, `reb`, `sarg`, `staff`, `cit`, `civ`, `col`, `sup`, `war`, mute` and `fk`.");
+		if (!args.length) return message.channel.send("That isn't a valid permission! The different types of valid permissions are: `db`, `ner`, `civ`, `admin`, `tri`, `mod`, `reb`, `sarg`, `staff`, `cit`, `civ`, `col`, `sup`, `kw` and `mute`");
 		let permission = args[0].toLowerCase();
 		async function havePermission(role) {
 			const roleObj = client.guilds.cache.get(client.config.supportServer).roles.cache.get(role);
@@ -48,7 +48,7 @@ module.exports = {
 			havePermission(client.config.roles.col);			
 		} else if (permission.startsWith("sup")) {
 			havePermission(client.config.roles.supreme);			
-		} else if (permission.startsWith("war")) {
+		} else if (permission.startsWith("kw")) {
 			havePermission(client.config.roles.warrior);			
 		} else if (permission.startsWith("mute")) {
 			havePermission(client.config.roles.muted);			
@@ -66,7 +66,7 @@ module.exports = {
 					})
 						.catch(console.error);
 		} else {
-			message.channel.send("That isn't a valid permission! The different types of valid permissions are: `db`, `ner`, `civ`, `admin`, `tri`, `mod`, `reb`, `sarg`, `staff`, `cit`, `civ`, `col`, `sup`, `war`, mute` and `fc`.");
+			message.channel.send("That isn't a valid permission! The different types of valid permissions are: `db`, `ner`, `civ`, `admin`, `tri`, `mod`, `reb`, `sarg`, `staff`, `cit`, `civ`, `col`, `sup`, `kw`and mute`");
 		}
 	},
 }

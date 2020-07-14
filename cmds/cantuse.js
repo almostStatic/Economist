@@ -13,7 +13,7 @@ module.exports = {
 		Promise.all(
 				client.users.cache.map(async x => [ x, await client.db.get(`cmds.${command.name}${x.id}`) ])
 			).then((x) => {
-				msg.edit(`Filtering Results...`)
+				msg.edit(`Filtering Results...`);
 				return x.filter(a => a[1]);
 			})	
 					.then((x) => {

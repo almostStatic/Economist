@@ -11,7 +11,7 @@ module.exports = {
 		if (!data) {
 			let bal = await client.db.get('bal' + message.author.id);
 			if (!bal) bal = 0;
-			bal = parseInt(bal);
+			bal = Number(bal);
 			await client.db.set('bal' + message.author.id, bal + 500);
 			await client.db.set('dailyc' + message.author.id, {
 				lastUsed: Date.now(),
@@ -29,7 +29,7 @@ module.exports = {
 				now,
 				data.cd,
 			)//		cooldown: function (lastUsed, now, cdAmt) {
-			return message.channel.send(`You must wait another ${Math.round(time.hrs / 10)} hours and ${time.mins} minutes before collecting your daily reward!`)
+			return message.channel.send(`You must wait another ${time.hrs} hours and ${time.mins} minutes before collecting your daily reward!`)
 		};
 	}
 }

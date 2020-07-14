@@ -23,8 +23,8 @@ module.exports = {
 		let guildMember = message.guild.members.cache.get(usr.id);
 		if (!guildMember) return message.channel.send(`${client.config.emoji.err} ${usr.tag} is not a member of this server`);
 		if(guildMember.roles.cache.has(gr.id)) {
-			guildMember.roles.remove(gr.id);
-			await message.channel.send({
+			await guildMember.roles.remove(gr.id);
+			return message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
 				.setDescription(`${usr.tag} no longer has the ${gr.name} role`)
@@ -32,8 +32,8 @@ module.exports = {
 		};
 	
 		if(!guildMember.roles.cache.has(gr.id)) {
-			guildMember.roles.add(gr.id);
-			await message.channel.send({
+			await guildMember.roles.add(gr.id);
+			return message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
 				.setDescription(`${usr.tag} now has the ${gr.name} role`)

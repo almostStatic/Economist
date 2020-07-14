@@ -18,7 +18,6 @@ module.exports = {
 		let color = args[0];
 		let len = args[0].length - 6;
 		let x = args[0].slice(0, -len);
-		console.log(x)
 		if (!color.startsWith('#')) {
 			color = `#${args[0]}`;
 		} else {

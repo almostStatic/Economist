@@ -1,7 +1,9 @@
+"dont use strict, mkay"
 const keyv = require('keyv');
-require('@keyv/sqlite');
 const fs = require('fs');
 const ms = require('ms');
+require("@keyv/sqlite")
+const mysql = require('mysql');
 const defaults = require('./config.js');
 const express = require('express');
 const app = express();
@@ -10,22 +12,24 @@ const Discord = require('discord.js');
 const cooldowns = new Discord.Collection();
 const client = new Discord.Client({
 	disableMentions: 'everyone',
+	ws: {
+		properties: {
+			$browser: 'Discord Android',
+			$device: 'Discord Android'
+		}
+	}
 });
 
 const cantUsed = [
-	"Why would you want to use this command?",
-	"You're not cool enough to use this command!",
-	"no can do pal",
-	"hm.",
-	"You lack sufficent permissions required in order to use this command. L",
-	"Permissions are bad, Mkay",
+	"Sorry m8, you're not allowed to use this command"
 ]
-
-client.db = new keyv('sqlite://./database.sqlite');
+client.db = new keyv('sqlite://./database.sqlite')
+//client.db = new keyv(`mysql://asadcode_admin:${process.env.DB_PASSWORD}@${process.env.srv}/asadcode_economist`)
 client.commands = new Discord.Collection();
 client.comma = defaults.functions.comma;
 client.getID = defaults.functions.getID;
 client.cooldown = defaults.functions.cooldown;
+client.trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 client.config = new Object(defaults.config);
 client.usr = async function (str) {
 	str = str.toString();
@@ -59,7 +63,18 @@ for (const file of commandFiles) {
 
 app.get('/', (req, res) => res.send(new Date()))
 
+client.db.on("error", console.log)
+
+client.on("messageDelete", async (message) => {
+	if (message.author.bot) return;
+	await client.db.set("snipe" + message.channel.id, {
+		author: message.author.id,
+		message: message.content || "n/a",
+	});
+})
+
 client.on('ready', async() => {
+	await client.db.delete("stun501710994293129216")
 	console.log(client.commands.map(x => x.name).join(", "))
 	console.log(client.guilds.cache.map(x => x.name).join(', '))
 	console.log(`Logged in as ${client.user.tag}`);
@@ -88,6 +103,7 @@ client.on('ready', async() => {
 client.on('message', async message => {
 	if (message.author.bot) return;
 	let rand = Math.floor(Math.random() * 10);
+	if(message.channel.type=="dm")return;
 	if(message.guild.id=="706845688969035897") rand *= 2;
 	if (rand >= 18) {
 		let old = await client.db.get(`briefcase${message.channel.id}`);
@@ -113,15 +129,9 @@ client.on('message', async message => {
 			})
 		};
 	};
-	let prefix;
-	if (message.channel.type != 'dm') {
-	 prefix = await client.db.get('prefix' + message.guild.id);
-	 if (!prefix) prefix = client.config.prefix;
-	} else { prefix = client.config.prefix; };
-	if (!prefix) prefix = client.config.prefix;
+	let prefix = await client.db.get("prefix" + message.guild.id) || client.config.prefix;
 	if (!message.content.startsWith(prefix)) return;
 	if (message.partial) message = await message.fetch();
-
 	const ss = client.guilds.cache.get(client.config.supportServer);
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
@@ -129,15 +139,19 @@ client.on('message', async message => {
 	const stun = await client.db.get('stun' + message.author.id);
 	const antiStun = await client.db.get('antistun' + message.author.id);
 	if (!antiStun) {} else { await client.db.delete('stun' + message.author.id);};
+	const stunMsg = await client.db.get("stunmsg" + message.author.id) || "You can't use any commands while you're stunned! ($time)"
 	if (!stun) {} else {
 		if (stun.at > Date.now() - stun.time) {
 			const stunnedAt = stun.at;
 			const time = stun.time;//in minutes
-			return message.channel.send(`You can't use any commands while you're stunned... ${client.comma(Math.round((stunnedAt - (Date.now() - time)) / ms('1m')))} ${Math.round((stunnedAt - (Date.now() - time) / ms('1m'))) != 1 ? 'minutes' : 'minute'} left.`) 
+			let stunTime = client.comma(Math.round((stunnedAt - (Date.now() - time)) / ms('1m')));
+			let msg = stunMsg;
+			if (!msg.includes('$time')) msg += "$time";
+			msg = msg.replace(/\$time+/, `${stunTime} ${stunTime == 1 ? "minute" : "minutes"}`);
+			return message.channel.send(msg) 
 		};
 	};
 	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-	const fk = await client.db.get('fk' + message.author.id);
 	message.author.color = await client.db.get('color' + message.author.id);
 	if (!message.author.color) {
 			message.author.color = client.config.defaultHexColor;//s[Math.floor(Math.random() * client.config.defaultHexColors.length)];
@@ -158,7 +172,7 @@ client.on('message', async message => {
 	const now = Date.now();
 	const timestamps = cooldowns.get(command.name);
 	let cooldownAmount = (command.cooldown || 5) * 1000;
-	if (mem.roles.cache.has(client.config.roles.rebel)) {
+	if (mem && (mem.roles.cache.has(client.config.roles.rebel))) {
 		cooldownAmount = 0;
 	};
 	if (timestamps.has(message.author.id)) {
@@ -177,6 +191,7 @@ client.on('message', async message => {
 	if (!command.nerd) command.nerd = false;
 	if (!command.disabled) command.disabled = false;
 	if (!command.supreme) command.supreme = false;
+	if (!command.kw) command.kw = false;
 	if (command.guild && (message.channel.type == 'dm')) {
 		return message.channel.send(`This command may not be executed inside a DM channel.`)
 	};
@@ -188,6 +203,10 @@ client.on('message', async message => {
 	 })
 
 	if (command.nerd && (!mem.roles.cache.has(client.config.roles.nerd))) {
+		return message.reply(cantUsed[Math.floor(Math.random() * cantUsed.length)]);		
+	};
+
+	if (command.kw && (!mem.roles.cache.has(client.config.roles.warrior))) {
 		return message.reply(cantUsed[Math.floor(Math.random() * cantUsed.length)]);		
 	};
 
@@ -209,8 +228,16 @@ client.on('message', async message => {
 
 	message.guild.prefix = prefix;
 
+	await command.run(client, message, args)
+		.catch((error) => {
+			return message.channel.send({
+				embed: new Discord.MessageEmbed()
+				.setColor("#aa0000")
+				.setDescription(`Sorry, but an error occured!\n${error}`)
+			})
+		})
+
 	try {
-		command.run(client, message, args);
 		let old = await client.db.get('cmds');
 		await client.db.set('cmds', Number(old + 1));
 		let Old = await client.db.get("cmds" + message.author.id);
