@@ -6,9 +6,9 @@ module.exports = {
 	description: "View your pet's stats",
 	async run(client, message, args) {
 		async function Embed(id, tag) {
-			let data = await client.db.get('pet' + id);
+			let data = await client.db.get('pet' + id, { raw: false });
 			if(!data) {
-				return message.channel.send("It looks like you don't own a pet! Why not adopt one by using `" + message.guild.prefix + 'adopt`')
+				return message.channel.send(`${message.author.id == id ? `You don't own a pet!` : `${tag} does not own a pet!`} Why not adopt one by using \`${message.guild.prefix}adopt\``)
 			};
 			data = data.split(";");
 			"level;health;energy;exp;credits;intel;endur;str;affec"
@@ -27,20 +27,20 @@ module.exports = {
 			let emb = new MessageEmbed()
 				.setColor(message.author.color)
 				.setTitle(`${tag}'s Pet ${isNamed == 'Y' ? `(${name})` : ''} [${level}]`)
-				.setDescription(`\`${message.guild.prefix}disown\` to disown your pet and delete it\n\`${message.guild.prefix}name <new name>\` to name your pet\n\`${message.guild.prefix}stroke\` to stroke your pet and increase its Affection by 1\n\`${message.guild.prefix}search\` to get your pet to go out searching for stuffs and gain a certain amount of XP depending on your pet's Intellect\n\`${message.guild.prefix}upgrade <stat> <amount>\` to upgrade \`<stat>\` by \`<amount>\` points, \`<amount>\` defaults to 1`)
+				.setDescription(`\`${message.guild.prefix}disown\` to disown your pet and delete it\n\`${message.guild.prefix}name <new name>\` to name your pet (requires Supreme)\n\`${message.guild.prefix}stroke\` to stroke your pet and increase its Affection by 1\n\`${message.guild.prefix}search\` to get your pet to go out searching for stuffs and gain a certain amount of XP depending on your pet's Intellect\n\`${message.guild.prefix}upgrade <stat> <amount>\` to upgrade \`<stat>\` by \`<amount>\` points, \`<amount>\` defaults to 1`)
 				.addField(
 					`Stats`,
 `
-:heart: Health - ${client.comma(health)}/10,000
-:zap: Energy - ${energy || 0}
+:heart: Health - ${message.author.com == 1 ? health : client.comma(health)}/${message.author.com == 1 ? "10000" : "10,000"}
+:zap: Energy - ${message.author.com == 1 ? energy : client.comma(energy)}
 
-:star2: Experience - ${client.comma(xp)}/${client.comma(nextLevel)}
-:star: Credits - ${cred}
+:star2: Experience - ${message.author.com == 1 ? xp : client.comma(xp)}/${message.author.com == 1 ? nextLevel : client.comma(nextLevel)}
+:star: Credits - ${message.author.com == 1 ? cred : client.comma(cred)}
 
-:bulb: Intellect - ${client.comma(intel)}
-:field_hockey: Endurance - ${client.comma(endur)}
-:fire: Strength - ${client.comma(str)}
-:sparkling_heart: Affection - ${client.comma(affec)}
+:bulb: Intellect - ${message.author.com == 1 ? intel : client.comma(intel)}
+:field_hockey: Endurance - ${message.author.com == 1 ? endur : client.comma(endur)}
+:fire: Strength - ${message.author.com == 1 ? str : client.comma(str)}
+:sparkling_heart: Affection - ${message.author.com == 1 ? affec : client.comma(affec)}
 `
 , true
 				)
@@ -49,6 +49,7 @@ module.exports = {
 		if (!args.length) {
 			return Embed(message.author.id, message.author.tag)
 		};
+		if(!args.length) args = [message.author.id];
 		let usr;
 		try {
 			usr = await client.users.fetch(client.getID(args[0]))

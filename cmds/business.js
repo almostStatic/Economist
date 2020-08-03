@@ -5,7 +5,7 @@ module.exports = {
 	aliases: ["business"],
 	description: "Shows you stats of your business",
 	async run(client, message, args) {
-		const user = await client.usr(args[0] || message.author.id);
+		let user = await client.usr(args[0] || message.author.id);
 		if (!user) user = message.author;
 		const busn = await client.db.get("busn" + user.id) || "0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0"
 		if (!busn) return message.channel.send("You don't own a business!\nContact Static to give you one (will become publically availible when it is fully released)");
@@ -19,7 +19,7 @@ module.exports = {
 			.setColor(message.author.color)
 			.setTitle(`${user.tag}'s Business [${name}]`)
 			.setDescription(`\`${message.guild.prefix}sellb\` to sell your business`)
-			.addField("Financial Data", `:dollar: Revenue - ${rev}\n:heavy_dollar_sign: Debt - ${debt}`)
+			.addField("Financial Data", `:dollar: Revenue - ${message.author.com == 1 ? rev : client.comma(rev)}\n:heavy_dollar_sign: Debt - ${message.author.com == 1 ? debt : client.comma(debt)}`)
 		})
 	}
 }

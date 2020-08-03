@@ -18,15 +18,16 @@ module.exports = {
 			':fish:',
 		];
 		const bal = await client.db.get('bal' + message.author.id) || 0;
-		await client.db.set('fishc' + message.author.id, true, 12000);
+		await client.db.set('fishc' + message.author.id, Date.now(), 12000);
 		message.channel.send({ embed: new MessageEmbed().setDescription(`${message.author.tag} locates their ${client.config.emoji.fishing_rod} and goes fishing...`).setColor(message.author.color) })
 		await delay(2000);
-		const fish = fishes[Math.floor(Math.random() * fishes.length)];
+		const Fish = Math.floor(Math.random() * fishes.length)
+		const fish = fishes[Fish];
 		const amtGained = Math.floor(Math.random() * 250 / 5)
 		let dollarsEarned = Math.round(amtGained / 5) * 10;
-		let oldAmt = await client.db.get(`${fish}${message.author.id}`) || 0;
-		oldAmt = parseInt(oldAmt) || 0;
-		await client.db.set(`${fish}${message.author.id}`, oldAmt + amtGained)
+		let oldAmt = await client.db.get(`fish${Fish}${message.author.id}`) || 0;
+		oldAmt = Number(oldAmt) || 0;
+		await client.db.set(`fish${Fish}${message.author.id}`, oldAmt + amtGained)
 		if (fishes[fish] == ':dolphin:') dollarsEarned = (dollarsEarned * 2) * amtGained;
 		if (fishes[fish] == ':shark:') dollarsEarned = (dollarsEarned / 2) * amtGained;
 		if (fishes[fish] == ':blowfish:') dollarsEarned = 0;

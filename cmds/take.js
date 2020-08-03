@@ -168,6 +168,8 @@ module.exports = {
 			assign(usr, client.config.roles.human, 'human (member)')
 		} else if (permission.startsWith('db')) {
 			assign(usr, client.config.roles.db, ':tools: Database Manager')
+		} else if (permission.startsWith("judg")) {
+			assign(usr, client.config.roles.judge, "judge");
 		} else if (permission.startsWith("bus")) {
 			assign(usr, client.config.roles.businessman, 'businessman')
 		} else if (permission.startsWith("noexec")) {

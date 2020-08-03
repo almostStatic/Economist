@@ -39,9 +39,9 @@ module.exports = {
 			if (owns) return message.channel.send(`${client.config.emoji.err} You already own a ${client.config.emoji.mobile_phone} !`);
 			await client.db.set('bal' + message.author.id, parseInt(bal - things[T].price))
 			await client.db.set('phone' + message.author.id, true);
-			let phoneNumber = Math.floor(Math.random() * 457875);
+			let phoneNumber = Math.floor(Math.random() * 100000);
 			while (await client.db.get(phoneNumber)) {
-				phoneNumber = Math.floor(Math.random() * 457875);
+				phoneNumber = Math.floor(Math.random() * 100000);
 			}
 			await client.db.set('n' + phoneNumber, message.author.id);
 			await client.db.set('number' + message.author.id, phoneNumber)
@@ -61,17 +61,17 @@ module.exports = {
 				.setDescription(`${message.author.tag} has purchased a ${client.config.emoji.phonebook} !`)
 			})
 		} else if (t == 101) {
-			let amt = args[1];
+			let amt = Number(args[1]);
 			if (!amt) amt = 1;
 			if (isNaN(amt)) return message.channel.send("The quantity of how many pills you want to buy must be a number");
 			let x = await client.db.get(`chillpills${message.author.id}`) || 0;
-			x = parseInt(x);
+			x = Number(x);
 			if (bal - (things[T].price * amt) < 0) return message.channel.send(`You don't have enough money to purchase ${amt} chill pills!`);
 			await client.db.set(`chillpills${message.author.id}`, parseInt(x + amt));
 			message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
-				.setDescription(`${message.author.tag} has purchased ${client.config.emoji.chill} ${amt}!`)
+				.setDescription(`${message.author.tag} has purchased ${client.config.emoji.chill} ${message.author.com == 1 ? amt : client.comma(amt)}!`)
 			})			
 		}
 	},

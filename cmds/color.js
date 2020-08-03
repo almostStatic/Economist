@@ -44,7 +44,7 @@ module.exports = {
 				await client.db.set('color' + message.author.id, color);
 			};
 		} else {
-			message.channel.send(`Whoops! That doesn't seem to be a valid HEX colour code. If you're having issues, feel free to DM \`${client.users.cache.get(client.config.owner).tag}\``)
+			message.channel.send(`Whoops! That doesn't seem to be a valid HEX colour code. If you're having issues, feel free to DM \`${client.users.cache.get(client.config.owner).tag}\`!`)
 		}
 	},
 }

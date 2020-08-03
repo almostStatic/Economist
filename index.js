@@ -1,28 +1,31 @@
-"dont use strict, mkay"
 const keyv = require('keyv');
 const fs = require('fs');
 const ms = require('ms');
 require("@keyv/sqlite")
-const mysql = require('mysql');
 const defaults = require('./config.js');
 const express = require('express');
 const app = express();
 const delay = require('delay');
 const Discord = require('discord.js');
+const Intents = new Discord.Intents(Discord.Intents.NON_PRIVILEGED);
+Intents.add(['GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILDS']);
 const cooldowns = new Discord.Collection();
 const client = new Discord.Client({
 	disableMentions: 'everyone',
 	ws: {
+		intents: Intents,
 		properties: {
 			$browser: 'Discord Android',
 			$device: 'Discord Android'
-		}
-	}
+		},
+	},
 });
 
 const cantUsed = [
-	"Sorry m8, you're not allowed to use this command"
+	"Sorry m8, you're not allowed to use this command",
+	"You don't have permission to use this command!",
 ]
+
 client.db = new keyv('sqlite://./database.sqlite')
 //client.db = new keyv(`mysql://asadcode_admin:${process.env.DB_PASSWORD}@${process.env.srv}/asadcode_economist`)
 client.commands = new Discord.Collection();
@@ -74,14 +77,14 @@ client.on("messageDelete", async (message) => {
 })
 
 client.on('ready', async() => {
-	await client.db.delete("stun501710994293129216")
-	console.log(client.commands.map(x => x.name).join(", "))
-	console.log(client.guilds.cache.map(x => x.name).join(', '))
+//	console.log(client.commands.map(x => x.name).join(", "))
+	//console.log(client.guilds.cache.map(x => x.name).join(', '))
 	console.log(`Logged in as ${client.user.tag}`);
+	client.guilds.cache.get(client.config.supportServer).members.fetch();
 	client.channels.cache.get(client.config.channels.ready).send({
 		embed: new Discord.MessageEmbed()
 		.setColor("RANDOM")
-		.setDescription(`Successfully logged in with ${client.guilds.cache.size} guilds cached, with ${client.users.cache.size} users.`)
+		.setDescription(`Successfully logged in with ${client.guilds.cache.size} guilds cached with ${client.users.cache.size} users.`)
 	});
 	client.users.cache.forEach(async(user) => {
 		let member = client.guilds.cache.get(client.config.supportServer).member(user.id);
@@ -101,14 +104,20 @@ client.on('ready', async() => {
 });
 
 client.on('message', async message => {
+	if(message.channel.type == "dm") return;
+	if (message.guild) await message.guild.members.fetch();
 	if (message.author.bot) return;
+	if (message.system) return;
+	if (message.webhookID) return;
+	if (message.partial) message = await message.fetch();
+
+	message.content = message.content.replace(/me/g, message.author.id)
 	let rand = Math.floor(Math.random() * 10);
-	if(message.channel.type=="dm")return;
-	if(message.guild.id=="706845688969035897") rand *= 2;
+	if(message.guild.id == "706845688969035897") rand *= 2;
 	if (rand >= 18) {
 		let old = await client.db.get(`briefcase${message.channel.id}`);
 		let p = await client.db.get("prefix" + message.guild.id) || "~";
-		if(old){}else{
+		if(old) {} else {
 			await client.db.set(`briefcase${message.channel.id}`, true);
 			message.channel.send(`Someone just dropped their :briefcase: briefcase in this channel! Hurry up and steal it with \`${p}steal\``);
 		};
@@ -131,23 +140,23 @@ client.on('message', async message => {
 	};
 	let prefix = await client.db.get("prefix" + message.guild.id) || client.config.prefix;
 	if (!message.content.startsWith(prefix)) return;
-	if (message.partial) message = await message.fetch();
+
 	const ss = client.guilds.cache.get(client.config.supportServer);
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
-	const mem = ss.member(message.author);
+	const mem = ss.member(message.author.id);
 	const stun = await client.db.get('stun' + message.author.id);
 	const antiStun = await client.db.get('antistun' + message.author.id);
 	if (!antiStun) {} else { await client.db.delete('stun' + message.author.id);};
 	const stunMsg = await client.db.get("stunmsg" + message.author.id) || "You can't use any commands while you're stunned! ($time)"
 	if (!stun) {} else {
-		if (stun.at > Date.now() - stun.time) {
+		if (stun.at > Date.now() - stun.time && (!message.content.toLowerCase().startsWith('~data'))) {
 			const stunnedAt = stun.at;
 			const time = stun.time;//in minutes
 			let stunTime = client.comma(Math.round((stunnedAt - (Date.now() - time)) / ms('1m')));
 			let msg = stunMsg;
 			if (!msg.includes('$time')) msg += "$time";
-			msg = msg.replace(/\$time+/, `${stunTime} ${stunTime == 1 ? "minute" : "minutes"}`);
+			msg = msg.replace(/\$time+/, `${stunTime} ${stunTime == 1 ? "minute" : "minutes"} left`);
 			return message.channel.send(msg) 
 		};
 	};
@@ -202,15 +211,15 @@ client.on('message', async message => {
 		.setDescription(`This command has been disabled by ${client.users.cache.get(client.config.owner).tag}`)
 	 })
 
-	if (command.nerd && (!mem.roles.cache.has(client.config.roles.nerd))) {
+	if (command.nerd && (mem && (!mem.roles.cache.has(client.config.roles.nerd)))) {
 		return message.reply(cantUsed[Math.floor(Math.random() * cantUsed.length)]);		
 	};
 
-	if (command.kw && (!mem.roles.cache.has(client.config.roles.warrior))) {
+	if (command.kw && (mem && (!mem.roles.cache.has(client.config.roles.warrior)))) {
 		return message.reply(cantUsed[Math.floor(Math.random() * cantUsed.length)]);		
 	};
 
-	if (command.dev && (!mem.roles.cache.has(client.config.roles.staff))) {
+	if (command.dev && (!mem || (!mem.roles.cache.has(client.config.roles.staff)))) {
 		return message.reply(cantUsed[Math.floor(Math.random() * cantUsed.length)]);
 	};
 
@@ -226,10 +235,20 @@ client.on('message', async message => {
 		return message.channel.send(`You're not colourful enough to use this command!`);
 	};	
 
-	message.guild.prefix = prefix;
+if (command.judge && (!mem.roles.cache.has(client.config.roles.judge))) {
+		return message.channel.send(`You must be a judge in order to use this command!`);
+	};	
 
-	await command.run(client, message, args)
+	message.guild.prefix = prefix;
+	let commasEnabled = await client.db.get("noComma" + message.author.id);
+	if (commasEnabled) {
+		message.author.com = 1;
+	} else {
+		message.author.com = 0;
+	}
+	 command.run(client, message, args)
 		.catch((error) => {
+			console.log(error)
 			return message.channel.send({
 				embed: new Discord.MessageEmbed()
 				.setColor("#aa0000")
@@ -256,7 +275,8 @@ client.on('guildMemberAdd', async (member) => {
 	let nick = await client.db.get('nick' + member.id);
 	if (nick) await member.setNickname(nick);
 	let wmc = await client.db.get('welcome' + member.id);
-	member.roles.add(rolePersist.split(';') || null);
+	member.roles.add(rolePersist.split(';') || null)
+		.catch((x) => {});
 	if (wmc) {
 		channel.send(`Welcome back ${member}! Any roles you had when you left the server have been re-assigned.`)
 		return;

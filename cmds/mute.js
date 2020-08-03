@@ -1,4 +1,3 @@
-
 const { MessageEmbed } = require(`discord.js`);
 const ms = require('ms');
 
@@ -26,7 +25,8 @@ module.exports = {
 		await member.roles.add(client.config.roles.muted);
 
 		let infc = await client.db.get("infcs" + member.id) || 0;
-		await client.db.set("infcs" + member.id, infc + 1);
+			infc = Number(infc);
+		await client.db.set("infcs" + member.id, infc + 2);
 		let amt = parseInt(args[1]);
 		if(isNaN(amt) || (!args[1])) return message.channel.send(`${client.config.emoji.err} You must provide a valid length (in minutes). For permanent mutes, use 0 as the length.`)
 		await client.db.set(`mute${member.id}`, {
@@ -42,17 +42,18 @@ module.exports = {
 			.setTitle("Member Muted")
 			.addField("Moderator", `${message.author.tag} | ${message.author.id}`, true)
 			.addField("User", `${member.user.tag} | ${member.id}`, true)
-			.addField('Infractions', infc + 1)
+			.addField('Infractions', infc + 2)
 			.addField('Reason', reason)
 			.setTimestamp()
-			.setFooter("Muted At")
+			.setFooter("Muted")
 		});
 		message.channel.send(`${client.config.emoji.tick} ${member.user.tag} has been muted ${amt == 0 ? `permanently` : `for ${amt} minutes`} and was sent the following message:`)
 		let dm = new MessageEmbed()
-		.setDescription(`You have received a ${amt == 0 ? 'permenant' : `${amt} minute`} mute from ${message.guild.name}. If you think this is a mistake or you were wrognly punished, please contact ${client.users.cache.get(client.config.owner).tag}`)
+		.setDescription(`You have received a ${amt == 0 ? 'permenant' : `${amt} minute`} mute from ${message.guild.name}. If you think this is a mistake or you were wrognly punished, please contact ${client.users.cache.get(client.config.owner).tag}\n[[Log Message](${logsMessage.url})]`)
 		.setColor(client.config.colors.red)
 		.addField(`Moderator`, message.author.tag, true)
-		.addField('Length', amt == 0 ? "infinite" : `${amt} minutes`, true)
+		.addField('Length', amt == 0 ? "Infinite" : `${amt} minutes`, true)
+		.addField("Total Infractions", infc + 2, true)
 		.addField("Reason", reason);
 		message.channel.send(dm);
 		member.send(dm)

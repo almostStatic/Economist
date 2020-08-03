@@ -15,18 +15,21 @@ module.exports = {
 					return message.channel.send(`You must wait another ${cd} minutes before stroking your pet again!`)
 				}
 		};
-		let x = await client.db.get("pet"+message.author.id);
-		if (!x)	return message.channel.send("It looks like you don't own a pet! Why not adopt one by using `" + message.guild.prefix + "adopt`")	
-		let affec = await client.db.get("pet_affec" + message.author.id) || 0;
-		if(affec > 1000) return message.channel.send("Your pet's affection points may not exceed 1,000")
-		affec = Number(affec);
-		let pet = await client.db.get(`pet_name${message.author.id}`) || "pet";
-		await client.db.set(`pet_affec${message.author.id}`, affec+1);
+		let pet = await client.db.get("pet"+message.author.id);
+		if (!pet)	return message.channel.send("It looks like you don't own a pet! Why not adopt one by using `" + message.guild.prefix + "adopt`")	
+			pet = pet.split(';');
+"level;health;energy;exp;credits;intel;endur;str;affec"
+		let affec = Number(pet[8]);
+		if(affec > 1000) return message.channel.send("Your pet's affection points may not exceed 1000");
+		affec = affec + 1;
+		pet[8] = affec.toString();
+		let petn = await client.db.get(`pet_name${message.author.id}`) || "pet";
+		await client.db.set(`pet${message.author.id}`, pet.join(';'));
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`:sparkling_heart: ${message.author.tag} has stroked their ${pet}; ${pet}'s affection towards ${message.author.tag} has increaed by one. awe`)
+			.setDescription(`:sparkling_heart: ${message.author.tag} has stroked their ${petn}; ${petn}'s affection towards ${message.author.tag} has increaed by one. awe`)
 		});
-		await client.db.set(`strokec${message.author.id}`, Date.now());
+		await client.db.set(`strokec${message.author.id}`, Date.now(), ms('30m'));
 	}
 }

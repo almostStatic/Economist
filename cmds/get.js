@@ -4,9 +4,9 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'get',
 	aliases: ['get', 'getv'],
-	description: 'gets a value from the database and returns it. (also shows its ata type and how it is formatted by the interpreter)',
+	description: 'gets a value from the database and returns it. (also shows its data type and how it is formatted by the interpreter)',
 	usage: '<user> <key>',
-	dev: false,
+	dev: true,
 	db: true,
 	guild: false,
 	async run(client, message, args) {

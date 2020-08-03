@@ -7,6 +7,7 @@ module.exports = {
 	async run(client, message, args) {
 		function format(str) {
 			let newStr = str.replace(/_+/g, " ").toLowerCase();
+			newStr = newStr.split(/ +/).map(x => `${x[0].toUpperCase()}${x.slice(1)}`).join(' ');
 			return newStr;
 		}
 		const user = await client.usr(args[0] || message.author.id);

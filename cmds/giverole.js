@@ -14,15 +14,16 @@ module.exports = {
 				usr = await client.users.fetch(args[0]).catch((x) => message.channel.send('An invalid user was provided.'))
 			};
 		if (!usr) return message.channel.send("Whoops! I can't find that user");
-		let Name = args[1] || '<new role>';
-		let hoist = args[2] || "-1";
+		let Name = `${usr.tag}'s New Custom Role'`
+		if(!args[1]) args[1] = '';
+		let hoist = args[1].includes("-h")
 		const role = await message.guild.roles.create({
 			data: {
 				name: Name,
-				position: message.guild.roles.cache.size - 7,
+				position: 9,
 				color: "RANDOM",
 				mentionable: false,
-				hoist: hoist.length > 0 ? true : false,
+				hoist: hoist == true ? true : false,
 				permissions: 0,
 			},
 			reason: `Creating an assignable role for ${usr.tag}`

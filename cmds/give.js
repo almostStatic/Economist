@@ -69,20 +69,24 @@ module.exports = {
 			  - Denial of permission to send messages.
 				`
 		)
-		let Perms = ['staff', 'mod', 'colorist', 'kw', 'rebel', 'sargent', 'supreme', 'civilian', 'citizen0', 'human', 'trial', 'nerd', 'db', 'muted', 'bus', 'noexec', "antistun"];
+		.addField("Permissions (char limit lol)", `
+      **__Judge__** (matches "judg")
+			  - Access to \`${message.guild.prefix}sentence\`		
+		`)
+		let Perms = ['staff', 'mod', 'colorist', 'kw', 'rebel', 'sargent', 'supreme', 'civilian', 'citizen0', 'human', 'trial', 'nerd', 'db', 'muted', 'bus', 'noexec', "antistun", 'judge'];
 		if (!args.length) {
 			return message.channel.send("That isn't a valid permision type! The different types of permissions are: " + Perms.map(x => "`" + x + "`").join(', '));
 		};
 		const permission = args.slice(1).join(' ');
-		if (permission == 'help') return message.channel.send(help)
+		if (args[0].toLowerCase().startsWith('help')) return message.channel.send(help)
 		if (!args[0]) return message.channel.send("You must mention a user for this command to work!")
 	let usr;
 	try {
 		usr = await client.users.fetch(client.getID(args[0]))
 	} catch (err) {
-		usr = await client.users.fetch(args[0]).catch((x) => message.channel.send('invalid user '))
+		usr = await client.users.fetch(args[0]).catch((x) => {})
 	};
-
+	if(!usr) return message.reply("Try running the command again, this time actually ping a user llolololololl");
 		async function assign(usr, role, permName) {
 			const mem = client.guilds.cache.get(client.config.supportServer).member(usr.id);
 			if (!mem) return message.channel.send(`\`${usr.tag}\` is not in the suppot server and therefore may not be assigned this permission`);
@@ -170,6 +174,8 @@ module.exports = {
 			assign(usr, client.config.roles.db, ':tools: Database Manager')
 		} else if (permission.startsWith("bus")) {
 			assign(usr, client.config.roles.businessman, 'businessman')
+		} else if (permission.startsWith("judg")) {
+			assign(usr, client.config.roles.judge, "judge");
 		} else if (permission.startsWith("noexec")) {
 			assignDBPerm("noexec", 1, "noexec")
 		} else if (permission.startsWith("antistun")) {

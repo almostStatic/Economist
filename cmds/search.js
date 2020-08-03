@@ -17,7 +17,7 @@ module.exports = {
 			message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
-				.setDescription(`${message.author.tag}'s ${p} has gotten lucky and gained :star: 2; ${p} is now level ${lvl + 1}`)
+				.setDescription(`${message.author.tag}'s ${p} has gotten lucky and gained :star: 2; ${p} is now level ${message.author.com == 1 ? lvl + 1 : client.comma(lvl + 1)}`)
 			});
 			let cred = Number(data[4]);
 				if (isNaN(cred)) cred = 0;
@@ -29,10 +29,9 @@ module.exports = {
 		if (cd) return message.channel.send("You can only search once every 25 seconds!");
 		await client.db.set("searchc" + message.author.id, 1, 25*1000)
 		let data = await client.db.get("pet" + message.author.id)
-		data = data.split(";")
+		data = data.split(";");
 		if (!data) return message.channel.send("You must own a pet in order to use this command! See `" + message.guild.prefix + "shop` for more information")
 				"level;health;energy;exp;credits;intel;endur;str;affec"
-				console.log(data)
 		let en = Number(data[2]);
 		let endur = Number(data[6]);
 		let lvl = Number(data[0])
@@ -40,10 +39,11 @@ module.exports = {
 		let intel = Number(data[5]);
 		let consumed = Math.round(100 / (endur >= 4 ? endur : 3));
 		const fishes = [':dolphin:',':shark:',':blowfish:',':tropical_fish:',':fish:'];		
-		const fish = fishes[Math.floor(Math.random() * fishes.length)];
+		const Fish = Math.floor(Math.random() * fishes.length);
+		const fish = fishes[Fish];
 		const amtGained = Math.floor(Math.random() * 250 / 5);
-		let oldAmt = await client.db.get(`${fish}${message.author.id}`) || 0;
-		oldAmt = parseInt(oldAmt) || 0;
+		let oldAmt = await client.db.get(`fish${Fish}${message.author.id}`) || 0;
+		oldAmt = Number(oldAmt) || 0;
 		let xpGained = Math.floor( 
 			Math.random() * (intel * 10)
 		) * 4;
@@ -51,9 +51,6 @@ module.exports = {
 		if (endur < 4) {
 			consumed = 35;
 		}
-		console.log(en-consumed)
-		console.log("en=",en)
-		console.log("consumed=",consumed)
 		if (en - consumed < 0) {
 			return message.channel.send(":yawn: I'm too tired to go searching...")
 		};
@@ -81,21 +78,19 @@ module.exports = {
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`${message.author.tag}'s ${pn} has failed to catch ${fish} ${amtGained}`)
+			.setDescription(`${message.author.tag}'s ${pn} has failed to catch ${fish} ${message.author.com == 1 ? amtGained : client.comma(amtGained)}`)
 		});
 		xpGained = xpGained / 2;
 		} else {
-		await client.db.set(`${fish}${message.author.id}`, oldAmt + amtGained)
+		await client.db.set(`fish${Fish}${message.author.id}`, oldAmt + amtGained)
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`${message.author.tag}'s ${pn} has caught ${fish} ${amtGained} and obtained :star2: ${client.comma(xpGained)}`)
+			.setDescription(`${message.author.tag}'s ${pn} has caught ${fish} ${amtGained} and obtained :star2: ${message.author.com == 1 ? xpGained : client.comma(xpGained)}`)
 		});
 		};
 		data[3] = xp + xpGained;
 		await client.db.set(`pet` + message.author.id, data.join(";"));
-		//see amount of times bot leveled up
-		//create loop of level up seq
 		let XP = Number(xp + xpGained)
 		const amount = Math.floor(XP / 200);
 		if (amount > lvl) {

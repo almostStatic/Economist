@@ -8,6 +8,15 @@ module.exports = {
 	description: "Adds :dollar: 500 to your account",
 	async run(client, message, args) {
 		let data = await client.db.get('dailyc' + message.author.id);
+		let now = Date.now();
+		let time;
+		if (data) {
+			 time = client.cooldown(
+				data.lastUsed,
+				now,
+				data.cd,
+			)
+		};
 		if (!data) {
 			let bal = await client.db.get('bal' + message.author.id);
 			if (!bal) bal = 0;
@@ -23,12 +32,8 @@ module.exports = {
 				.setColor(message.author.color)
 			})
 		} else {
-			let now = Date.now();
-			let time = client.cooldown(
-				data.lastUsed,
-				now,
-				data.cd,
-			)//		cooldown: function (lastUsed, now, cdAmt) {
+//		cooldown: function (lastUsed, now, cdAmt) {
+			
 			return message.channel.send(`You must wait another ${time.hrs} hours and ${time.mins} minutes before collecting your daily reward!`)
 		};
 	}

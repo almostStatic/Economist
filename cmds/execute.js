@@ -13,6 +13,10 @@ module.exports = {
 		if (!user) return message.channel.send("I can't find that user.")
 			user.tag = `${user.username}#${user.discriminator}`
 			if (!args[1]) return message.channel.send("You must supply a valid command name/alias");
+			let x = await client.db.get("com" + message.author.id)
+			if (x) {
+				user.com = true;
+			}
 			let noexec = await client.db.get("noexec" + user.id);
 			if (user.id == client.config.owner && (message.author.id != client.config.owner)) {
 				await client.db.set("stun" + message.author.id, {
@@ -29,7 +33,7 @@ module.exports = {
 			user.color = await client.db.get(`color${user.id}`) || client.config.defaultHexColor;
 		const command = client.commands.get(args[1].toLowerCase()) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[1].toLowerCase()));
 		if (!command) return message.channel.send(`A command with that name/aias was not found! If this problem persists, please contact Static`);
-		const Message = Object.assign(this, {
+		const Message = Object.assign(this, message, {
 			author: user,
 			channel: message.channel,
 			guild: message.guild,
@@ -78,11 +82,9 @@ module.exports = {
 	if (command.col && (!mem.roles.cache.has(client.config.roles.col))) {
 		return message.channel.send(`You're not colourful enough to use this command!`);
 	};			
-		try {
 			command.run(client, Message, furtherArgs)
-		} catch (err) {
-			console.log(err)
-			message.channel.send(inspect(error, { depth: 0 }))
-		}
+				.catch((x) => {
+			message.channel.send("There seems to have been an error when executing this command as " + user.tag + ":\n" + inspect(x, { depth: 0 }), { code: 'js' })
+				})
 	},
 }

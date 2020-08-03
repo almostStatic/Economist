@@ -1,12 +1,14 @@
 module.exports = {
 	functions: {
 		getID: function (mention) {
+			if (!mention) return;
 			const matches = mention.match(/^<@!?(\d+)>$/);
 			if (!matches) return;
 			const id = matches[1];
 			return id;			
 		},
 		comma: function (x) {
+			if (!x) return;
 				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		},		
 		/**
@@ -29,9 +31,10 @@ module.exports = {
 				return {
 					hrs: hrs,
 					mins: mins,
-				};//"You need to wait {hrs} hours and {mins} minutes before using that command again!"
-			};
-		 return;
+				};
+			} else {
+				return;
+			}
 		},
 	},
 	config: {
@@ -43,7 +46,7 @@ module.exports = {
 	'530606911326912522', 
 		'315311485738024960', "676123066165624866"],
 		owner: '501710994293129216',
-		x: 1594726151239,
+		x: 1594726151239,//last time rules were updated
 		channels: {
 			bug: '731890869313208341',
 			general: "706845689413369907",
@@ -56,6 +59,7 @@ module.exports = {
 			modlog: "719912989184229458",
 		},
 		roles: {
+			judge: '734418846865424424',
 			businessman: "728236365183188993",
 			updates: '722475705056624690',
 			db: '719604560607314001',

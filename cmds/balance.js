@@ -9,9 +9,6 @@ module.exports = {
 	guild: false,
 	disabled: false,
 	async run(client, message, args) {
-		function numberWithCommas(x) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-		}
 		/**
 		 * Displays the author's balance
 		 */
@@ -20,7 +17,7 @@ module.exports = {
 				message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
-				.setDescription(`${message.author.tag}'s account contains :dollar: ${numberWithCommas(authorBal) || '0'}`)
+				.setDescription(`${message.author.tag}'s account contains :dollar: ${message.author.com == 1 ? authorBal : client.comma(authorBal)}`)
 			});			
 		};
 		if (!args.length) {
@@ -42,7 +39,7 @@ module.exports = {
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`${usr.tag}'s account contains :dollar: ${numberWithCommas(bal) || '0'}`)
+			.setDescription(`${usr.tag}'s account contains :dollar: ${message.author.com == 1 ? bal : client.comma(bal)}`)
 		})
 	},
 }

@@ -18,6 +18,6 @@ module.exports = {
 			at: Date.now(),
 			time: parseInt(args[1] * ms('1m')),
 		}, parseInt(args[1] * ms('1m')))
-				message.channel.send(`${client.config.emoji.tick} Successfully stunned **${escapeMarkdown(usr.tag)}** for ${client.comma(args[1])} minutes.`)
+				message.channel.send(`${client.config.emoji.tick} Successfully stunned **${escapeMarkdown(usr.tag)}** for ${message.author.com == 1 ? args[1] : client.comma(args[1])} minutes.`)
 	} 
 }

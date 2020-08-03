@@ -20,6 +20,7 @@ module.exports = {
 			await client.db.set(`chillpills${message.author.id}`, parseInt(x - 1));
 			await client.db.delete(`strokec${message.author.id}`);
 			await client.db.delete(`dialc${message.author.id}`);		
+			await client.db.delete(`sentc${message.author.id}`)
 			message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)

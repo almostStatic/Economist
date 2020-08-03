@@ -39,7 +39,7 @@ module.exports = {
 					usr = await client.users.fetch(args[0]).catch((x) => message.channel.send('invalid user '))
 				};
 			if (!usr) return message.channel.send("Whoops! I can't find that user");
-			if (message.author.id == usr.id) return mesage.channel.send(`You can't pay yourself!`);
+			if (message.author.id == usr.id) return message.channel.send(`You can't pay yourself!`);
 			if (!args[1]) return message.channel.send("You must specify the amount of :dollar: you wish to pay " + usr.username);
 		let amt = args[1].toLowerCase();
 		if (amt.startsWith('all')) amt = authorBal;
@@ -52,16 +52,12 @@ module.exports = {
 		 await client.db.set('bal' + message.author.id, amountLeft);
 		let oldBal = await client.db.get('bal' + usr.id) || 0;
 			oldBal = Number(oldBal)
-		console.log(oldBal, typeof oldBal)
 		const newBal = Number(oldBal + amt);
-//		client.economy.add('bal' + usr.id, newBal)
-	//	const newBal =  Number(Number(oldBal) + Number(amt)).toPrecision()
-		console.log(newBal, typeof newBal)
 		await client.db.set('bal' + usr.id, newBal)
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`${message.author.tag} has paid :dollar: ${client.comma(amt)} (${amt.toString().length} digits) into ${usr.tag}'s account`)
+			.setDescription(`${message.author.tag} has paid :dollar: ${message.author.com == 1 ? amt : client.comma(amt)} (${amt.toString().length} digits) into ${usr.tag}'s account`)
 		})
 	},
 }
