@@ -1,13 +1,25 @@
 const { MessageEmbed } = require('discord.js');
+const rm = require('discord.js-reaction-menu');
+const ms = require('ms');
 
 module.exports = {
 	name: 'help',
 	aliases: ['help', 'helpme', 'cmdhelp'],
 	description: "*helps* you?",
 	async run(client, message, args) {
-		const inv = await client.generateInvite(8)
+		if (message.content.toLowerCase().endsWith('-cmds')) {
+			//;eval "1234567890".match(/.{1,5}/g);
+			var count = 1;
+			const string = client.commands.map(x => `${count++}. \`${x.name}\`: ${x.description}`).join('\n');
+			let embeds = []
+			const map = string.match(/[^]{1,2048}/g);
+			for (const x in map) {
+				embeds.push(new MessageEmbed().setColor(message.author.color).setTitle("Commands Map").setDescription(map[x]))
+			};
+			return new rm.menu(message.channel, message.author.id, embeds, ms('10m'))
+		};
 		if (args.length) {
-			const command = client.commands.get(args[0]) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0]));
+			const command = client.commands.get(args[0].toLowerCase()) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
 
 			if (!command) return message.channel.send("Please try to include a valid command name/alias!");
 
@@ -22,7 +34,6 @@ module.exports = {
 				.addField("Staff Only", command.dev ? 'true' : 'false', true)
 			})
 		};
-
 		const emb = new MessageEmbed()
 		.setColor(message.author.color)
 		.setDescription("**__COMMANDS LIST__**\n" + client.commands.map(x => x.name).join(', '))
@@ -37,10 +48,11 @@ Additionally, we have incorporated the concept of a **stun** system, meaning tha
 
 Below will be a list of commands; to view a description of each please use \`${message.guild.prefix}help <command name>\`.
 
-You can invite me by using this link: <${inv}>
+You can invite me by using this link: <${client.config.inv}>
 
 | **NOTE:** This bot is still in active development; many features may be incomplete or break regularly. I can not guarantee a 100% error-free experience. If you find any bugs, please report them by using \`${message.guild.prefix}bug short description | long, in depth description\` 
 			`
 		, { embed: emb })
+
 	}
 }

@@ -33,10 +33,11 @@ client.comma = defaults.functions.comma;
 client.getID = defaults.functions.getID;
 client.cooldown = defaults.functions.cooldown;
 client.trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
+client.hyphen = defaults.functions.hyphen;
 client.config = new Object(defaults.config);
 client.usr = async function (str) {
-	str = str.toString();
 	if (!str) return;
+	str = str.toString();
 	let usr;
 	try {
 		usr = await client.users.fetch(client.getID(str))
@@ -57,6 +58,7 @@ client.getUserFromPing = function(mention, withID) {
 	return client.users.cache.get(id);
 	}
 };
+
 const commandFiles = fs.readdirSync('./cmds').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -77,6 +79,7 @@ client.on("messageDelete", async (message) => {
 })
 
 client.on('ready', async() => {
+	console.log("\u2705")
 //	console.log(client.commands.map(x => x.name).join(", "))
 	//console.log(client.guilds.cache.map(x => x.name).join(', '))
 	console.log(`Logged in as ${client.user.tag}`);
@@ -84,7 +87,7 @@ client.on('ready', async() => {
 	client.channels.cache.get(client.config.channels.ready).send({
 		embed: new Discord.MessageEmbed()
 		.setColor("RANDOM")
-		.setDescription(`Successfully logged in with ${client.guilds.cache.size} guilds cached with ${client.users.cache.size} users.`)
+		.setDescription(`Successfully logged in; ${client.guilds.cache.size} guilds cached with ${client.users.cache.size} users.`)
 	});
 	client.users.cache.forEach(async(user) => {
 		let member = client.guilds.cache.get(client.config.supportServer).member(user.id);
@@ -101,17 +104,18 @@ client.on('ready', async() => {
 			await client.db.delete('mute' + user.id);
 		};
 	});
+	client.keys = ['mute', 'antistun', 'stun', 'stunmsg', 'color', 'noComma', `cmds`, 'pet', 'bal', 'fish_rod', 'phone', 'number', 'phonebook', 'chillpills', 'dailyc', 'sentc', 'dialc', 'chillc', 'strokec', 'role', 'spouse', 'fishc', 'fish0', 'fish1', 'fish2', 'fish3', 'fish4', 'infcs', 'pet_name', 'searchc', 'deldatareqed', 'dprvc', 'debug', 'bio']
 });
 
 client.on('message', async message => {
-	if(message.channel.type == "dm") return;
+	if (message.channel.type == "dm") return;
 	if (message.guild) await message.guild.members.fetch();
 	if (message.author.bot) return;
 	if (message.system) return;
 	if (message.webhookID) return;
 	if (message.partial) message = await message.fetch();
 
-	message.content = message.content.replace(/me/g, message.author.id)
+	message.content = message.content.replace(/myid/g, message.author.id)
 	let rand = Math.floor(Math.random() * 10);
 	if(message.guild.id == "706845688969035897") rand *= 2;
 	if (rand >= 18) {
@@ -139,8 +143,16 @@ client.on('message', async message => {
 		};
 	};
 	let prefix = await client.db.get("prefix" + message.guild.id) || client.config.prefix;
+	message.author.debug = await client.db.get('debug' + message.author.id);
 	if (!message.content.startsWith(prefix)) return;
-
+	if (message.author.debug) {
+		message.channel.send({
+			embed: new Discord.MessageEmbed()
+			.setColor(message.author.color)
+			.setTitle("Message Content Parsed As:")
+			.setDescription("```js\n" + message.content + "\n```")
+		})
+	}
 	const ss = client.guilds.cache.get(client.config.supportServer);
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
@@ -246,15 +258,16 @@ if (command.judge && (!mem.roles.cache.has(client.config.roles.judge))) {
 	} else {
 		message.author.com = 0;
 	}
-	 command.run(client, message, args)
-		.catch((error) => {
-			console.log(error)
-			return message.channel.send({
+	try {
+		await command.run(client, message, args)
+	} catch (e) {
+			console.log(e)
+			message.channel.send({
 				embed: new Discord.MessageEmbed()
 				.setColor("#aa0000")
-				.setDescription(`Sorry, but an error occured!\n${error}`)
+				.setDescription(`Sorry, but an error occured!\n\`\`\`\n${e.stack}\n\`\`\``)
 			})
-		})
+	}
 
 	try {
 		let old = await client.db.get('cmds');
@@ -262,7 +275,7 @@ if (command.judge && (!mem.roles.cache.has(client.config.roles.judge))) {
 		let Old = await client.db.get("cmds" + message.author.id);
 		await client.db.set('cmds' + message.author.id, Number(Old + 1));	
 	} catch (err) {
-		message.channel.send(`Error: ${err}`, { code: 'css' })
+		message.channel.send(`Error: ${err}`, { code: 'xl' })
 	};
 });
 
@@ -308,7 +321,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 	};
 	if (oldMember.nickname != newMember.nickname) {
 		 await client.db.set('nick' + oldMember.user.id);
-		 console.log('set.');
+		 console.log('set nickname change.');
 	};
 	if (oldMember.roles.cache.map(x => x.id).join(';') != newMember.roles.cache.map(x => x.id).join(';')) {
 		await client.db.set(`persist${oldMember.id}`, newMember.roles.cache.map(x => x.id).join(';'));

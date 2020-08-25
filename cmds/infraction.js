@@ -22,12 +22,11 @@ module.exports = {
 		if (isNaN(args[1])) return message.channel.send("You must include a valid base-10 denary number!")
 		let amt = Number(args[1]);
 		const Operation = args[2];
-/*		if (!Operation.startsWith('+') || (!Operation.startsWith('-'))) {
-};*/
+
 		let infcs = await client.db.get("infcs" + usr.id) || 0;
 			infcs = Number(infcs);
 		if (Operation.startsWith("+")) {
-			const ans = (infcs + amt);
+			const ans = (infcs + (amt));
 			let err;
 			await client.db.set(`infcs${usr.id}`, ans)
 				.catch((x) => err = x);
@@ -40,7 +39,7 @@ module.exports = {
 				.setDescription(`Successfully added ${amt} infractions to ${usr.tag}`)
 			})
 		} else if (Operation.startsWith('-')) {
-			const ans = (infcs - amt);
+			const ans = (infcs - (amt));
 			let err;
 			await client.db.set(`infcs${usr.id}`, ans)
 				.catch((x) => err = x);

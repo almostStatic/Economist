@@ -8,6 +8,8 @@
     "dumpEventTime": "2020-06-27T12:25:17Z",
     "dumpEventTimeStamp": "1593260717021",
     "processId": 2246,
+		"intellectual": false,
+		"good": true,
     "threadId": null,
     "cwd": "/home/runner/Economist",
     "commandLine": [

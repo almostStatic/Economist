@@ -13,5 +13,6 @@ module.exports = {
 			.setColor(message.author.color)
 			.setDescription(`${message.author.tag} has adopted a pet! \`${message.guild.prefix}pet\``)
 		})
+		require('../config.js').functions.cooldown(Date.now(), )
 	}
 }

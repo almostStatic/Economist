@@ -1,23 +1,48 @@
-const { MessageEmbed, escapeMarkdown } = require('discord.js');
+const { MessageEmbed, escapeMarkdown, Permissions, UserFlags } = require('discord.js');
 
 module.exports = {
 	name: 'profile',
 	aliases: ['profile'],
 	description: 'shows a user\'s profile',
 	async run(client, message, args) {
+		if (!args) args = [message.author.id]
 		let usr = await client.usr(args[0]).catch((x) => {});
 		if (!usr) usr = message.author;
 		let cmds = await client.db.get("cmds" + usr.id) || 1;
 		let color = await client.db.get('color' + usr.id) || client.config.defaultHexColor;
+		const bio = await client.db.get('bio' + message.author.id) || 'Set a bio using `' + message.guild.prefix + "bio`"
 		let infcs = await client.db.get("infcs" + usr.id) || 0;
+		function format(str) {
+			let newStr = str.replace(/_+/g, " ").toLowerCase();
+			newStr = newStr.split(/ +/).map(x => `${x[0].toUpperCase()}${x.slice(1)}`).join(' ');
+			return newStr.replace('Vad', 'VAD').replace('Tts', "TTS");
+		}
+		const mem = client.guilds.cache.get(client.config.supportServer).members.cache.get(usr.id)
+		let map;
+		if (mem) {
+			 map = Object.keys(Permissions.FLAGS).map(x => {
+				 if (mem.hasPermission(x)) {
+					 return format(x);
+				 } else {
+					 return 'false';
+				 };
+			 }).join(", ").replace(/false, /g,'').replace(", false",'');
+		};
+		let flags = new UserFlags(usr.flags).serialize()
+			flags = require('util').inspect(flags, {depth:100})
 		const emb = new MessageEmbed()
 		.setColor(color)
 		.setTitle(`${usr.tag}'s Profile`)
+		.setDescription(bio.toString().length ? bio : null)
 		.setThumbnail(usr.displayAvatarURL({ dynamic: true }))
+		.addField("Roles", client.trim(message.guild.member(usr.id).roles.cache.map(x => x.toString()).join(', ') || "`None`", 1024))
 		.addField("Commands Used", message.author.com == 1 ? cmds : client.comma(cmds), true)
 		.addField("Color Preference", color, true)
 		.addField('Server Infractions', infcs, true)
-
+		.addField("Flags", flags)
+		if (mem) {
+			emb.addField("Permissions", map)
+		};
 		message.channel.send(emb);
-	}
-}
+	},
+};

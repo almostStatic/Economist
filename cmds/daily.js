@@ -15,7 +15,7 @@ module.exports = {
 				data.lastUsed,
 				now,
 				data.cd,
-			)
+			);
 		};
 		if (!data) {
 			let bal = await client.db.get('bal' + message.author.id);

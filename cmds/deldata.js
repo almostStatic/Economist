@@ -9,8 +9,8 @@ module.exports = {
 			if (!args.length) return message.channel.send("You must mention someone for me to forget!");
 			const usr = await client.usr(args[0]).catch((x) => {});
             if (!usr) return message.channel.send("Unknown User.");
-            let keys = ['mute', 'antistun', 'stun', 'stunmsg', 'color', 'noComma', `cmds`, 'pet', 'bal', 'fish_rod', 'phone', 'number', 'phonebook', 'chillpills', 'dailyc', 'sentc', 'dialc', 'chillc', 'strokec', 'role', 'spouse', 'fishc', 'fish0', 'fish1', 'fish2', 'fish3', 'fish4', 'infcs', 'pet_name', 'searchc', 'deldatareqed', 'dprvc'];
-            keys = keys.concat(client.commands.map(x => `cmds.${x.name}${usr.id}`));
+            let keys = client.keys;
+            keys = keys.concat(client.commands.map(x => `cmds.${x.name}${usr.ID}`));
             for (x in keys) {
                 await client.db.delete(`${keys[x]}${usr.id}`)
                     .catch((error) => message.channel.send("Error whilst deleting keys[" + x + "]" + error, { code: 'xl' }))

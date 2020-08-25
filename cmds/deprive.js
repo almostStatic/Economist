@@ -14,7 +14,7 @@ module.exports = {
 				return message.channel.send("You should like wait " + data.hrs + " hours and " + data.mins + " minutes before depriving another stat!");
 			} else {
 
-			}
+			};
 		};
 		let pet = await client.db.get("pet" + message.author.id);
 		if (!pet) return message.channel.send("You don't seem to own a pet!");
@@ -35,15 +35,15 @@ module.exports = {
 			} else {
 				return message.channel.send("The different types of stats are: `intellect`, `endurance` and `strength`")
 			};
-		await client.db.set('dprvc' + message.author.id, Date.now());
 		pet = pet.split(';');
 		let Credits = Number(pet[index]);
 		let amt = Credits - 1;
 		if (amt < 0) {
 			return message.channel.send("You must have at least 2 credits on a specified `<stat>` before depriving your pet of this stat.");
 		};
-		pet[index] = pet[index] - amt;
-		pet[4] = pet[4] + amt;
+		await client.db.set('dprvc' + message.author.id, Date.now());
+		pet[index] = Credits - amt;
+		pet[4] = Number(pet[4]) + amt;
 		await client.db.set('pet' + message.author.id, pet.join(';'));
 		message.channel.send({
 			embed: new MessageEmbed()

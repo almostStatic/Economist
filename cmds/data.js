@@ -1,9 +1,8 @@
 const { MessageEmbed, escapeMarkdown } = require('discord.js');
-const { Interface } = require('readline');
 
 module.exports = {
 	name: 'data',
-	aliases: ['getdata', 'data', 'store'],
+	aliases: ['getdata', 'data', 'store', 'gd'],
 	description: "View a User's stored data",
 	async run(client, message, args) {
 		/**
@@ -12,7 +11,7 @@ module.exports = {
 		 */
 		async function data(usr) {
 			const x1 = await message.channel.send('Fetching your data...')
-      let keys = ['mute', 'antistun', 'stun', 'stunmsg', 'color', 'noComma', `cmds`, 'pet', 'bal', 'fish_rod', 'phone', 'number', 'phonebook', 'chillpills', 'dailyc', 'sentc', 'dialc', 'chillc', 'strokec', 'role', 'spouse', 'fishc', 'fish0', 'fish1', 'fish2', 'fish3', 'fish4', 'infcs', 'pet_name', 'searchc', 'deldatareqed', 'dprvc'];			
+      let keys = client.keys;	
 			keys = keys.concat(client.commands.map(x => `cmds.${x.name}${usr}`))
 			let msg = '';
 			for (x in keys) {

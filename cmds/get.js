@@ -20,7 +20,7 @@ module.exports = {
 		message.channel.send({
 			embed: new Discord.MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`\`\`\`js\n${require("util").inspect(x, { depth: 0 })}\n\`\`\``)
+			.setDescription(`\`\`\`js\n${require("util").inspect(x, { depth: 1000000000 })}\n\`\`\``)
 		})
 	},
 }
