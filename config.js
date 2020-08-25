@@ -1,5 +1,9 @@
 const config = {
 	functions: {
+		/**
+		 * Extracts the ID of a mentioned user from its raw content 
+		 * @param {string} mention String to extract mention ID from
+		 */
 		getID: function (mention) {
 			if (!mention) return;
 			const matches = mention.match(/^<@!?(\d+)>$/);
@@ -7,10 +11,21 @@ const config = {
 			const id = matches[1];
 			return id;			
 		},
+		/**
+		 * Inserts comma to a string; acts as a thousands separator 
+		 * @param {string} x String to add the commas to 
+		 */
 		comma: function (x) {
 			if (!x) return;
 				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		},
+		/**
+		 * This function will add hyphens to a string every X characters; view [the article type thingy](https://repl.it/talk/share/Insert-Hyphens-in-JavaScript-String/50244) for additional information.
+		 * @param {string} str The string to hyphenify
+		 * @param {number} interval The interval of which to add hyphens to the string 
+		 * @param {object} options Options to be applied.
+		 * @returns {string} String<hyphenified> Hyphenified String
+		 */
 		hyphen: function (str, interval, options) {
 			if (!options) {
 				options = {
