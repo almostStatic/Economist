@@ -78,7 +78,7 @@ module.exports = {
 		
 		user2.data.trading.item.key = identifyKey(user2.data.trading.item.name.toLowerCase(), user2.user.id).key;
 		user2.data.trading.item.OFFICIAL_NAME = identifyKey(user2.data.trading.item.name.toLowerCase(), user2.user.id).name;
-		message.channel.send(`user 2 is trading:\n\nitem=${user2.data.trading.item.name}\namt=${user2.data.trading.item.amt}`);
+		message.channel.send(`User 2 is trading:\n\nitem=${user2.data.trading.item.name}\namt=${user2.data.trading.item.amt}`);
 
 		message.reply("Are you willing to participate in this trade? (`y` / `n`)", {
 			embed: new MessageEmbed()
@@ -131,7 +131,7 @@ module.exports = {
 		/**
 		 * 2 users; they both make a trade; what user 1 traded is removed from user1 and added to user2; what user2 traded is removed from user2 and added to user1.
 		 */
-			//remove items from both users.
+		//remove items from both users.
 		 user2.data.trading.item.hasEnough = false;
 		 let amountOfItem2 = await client.db.get(user2.data.trading.item.key) || 0;
 		 	amountOfItem2 = Number(amountOfItem2)
@@ -171,5 +171,5 @@ module.exports = {
 
 		 msg.edit("**[SUCCESS]** Trade completed in " + eval(Date.now() - ms) + " MS");		
 		 message.channel.send({ embed: emb }) 
-	}
-}
+	},
+};
