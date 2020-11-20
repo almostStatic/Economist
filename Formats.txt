@@ -1,0 +1,23 @@
+~eval const emb = new Discord.MessageEmbed()
+.setTitle("Bot Blacklisted?")
+.setColor("#f56c6c")
+.setDescription(`**__If you see this channel, there are only 2 reasons...__**
+======
+> - You are a staff member on this server and as well as a bot staff.
+> - You were blacklisted/banned from using the bot.
+======
+***You Have Five Options:***`)
+.addField(`[ 2 That seem more fun and logical ]`,`
+> - Appeal for a data **removal** and as well as apply for ban removal.
+> - Appeal for a bot ban removal **(When available)** and continue using the bot (in and out of this server).
+======`, true)
+.addField(`[ 3 That would suck and not be fun (for you) ]`,`
+> - Remain bot banned and hangout in the server.
+> - Leave this server and not be unbanned from the bot.
+> - Have your data cleared as requested, but still be banned
+======`, true)
+.addField(`If you chose one of the bottom 3 options:`, `Easier for you I suppose...`, false)
+.addField(`If you choose one of the top 2 options:`, `DM <@${client.config.owner}> [ or a <@&757885305184583720> / <@&759605779191562251> ]`)
+.setFooter(message.guild.name, `https://cdn.discordapp.com/avatars/671708767813107724/153a32a25084dc9f445406e4ef0f918f.webp`)
+.setThumbnail(`https://vietmine.com/wp-content/uploads/2018/03/Banned.png`)
+message.channel.send(emb)

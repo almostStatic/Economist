@@ -1,0 +1,4 @@
+Suggestion for a new stat on the ~pet:
+	"Excitement" | higher the Excitment lower search cooldown.
+
+
