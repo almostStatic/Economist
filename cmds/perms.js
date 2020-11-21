@@ -2,6 +2,7 @@ const { Permissions, MessageEmbed } = require("discord.js");
 
 module.exports = {
 	name: 'perms',
+	category: 'utl',
 	aliases: ["perms", "permissions", "permcheck"],
 	description: "See someone's server permissions",
 	async run(client, message, args) {

@@ -5,26 +5,27 @@ module.exports = {
 	name: 'cooldowns',
 	aliases: ['cds', 'cooldowns', 'cd', 'coold'],
 	supreme: true,
+	category: 'utl',	
 	sup: true,
 	async run(client, message, args) {
 		 async function getCd(key, cdAmt) {
-			let lastUsed = await client.db.get(key);
-			if (lastUsed) {
-				let cooldownData = client.cooldown(lastUsed, message.createdTimestamp, cdAmt);
-				if (cooldownData) {
-					return { hrs: cooldownData.hrs, mins: cooldownData.mins };
+			 let lastUsed = await client.db.get(key);
+				if (lastUsed) {
+					let cooldownData = client.cooldown(lastUsed, message.createdTimestamp, cdAmt);
+					if (cooldownData) {
+						return { hrs: cooldownData.hrs, mins: cooldownData.mins };
+					} else {
+						return null;
+					}
 				} else {
-					return false;
+					return null;
 				}
-			} else {
-				return false;
-			}
 		}
 		async function cds(id, tag) {
 			let cooldown = ``;
-			const dailyc = await getCd(`dailyc${message.author.id}`, ms('24h'));
+			const dailyc = await getCd(`dailyc${id}`, 86400000);
 			if (dailyc) {
-				cooldown = `${cooldown}\ndaily: ${dailyc.hrs} hrs, ${dailyc.mins}`
+				cooldown = `${cooldown}\ndaily: ${dailyc.hrs} hrs, ${dailyc.mins} mins`
 			};
 
 			const judgec = await getCd("sentc" + id, ms('30m'));
@@ -45,6 +46,11 @@ module.exports = {
 			const strc = await getCd("strokec" + id, ms('30m'));
 			if (strc) {
 				cooldown = `${cooldown}\nstroke: ${strc.hrs} hrs, ${strc.mins} mins`
+			};	
+
+			const robc = await getCD("robc" + id, ms("20m"))
+			if (robc) {
+				cooldown = `${cooldown}\nrob: ${robc.hrs} hrs, ${robc.mins} mins`
 			};	
 
 			message.channel.send({

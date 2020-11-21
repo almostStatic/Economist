@@ -5,6 +5,7 @@ module.exports = {
 	"aliases": ["spawn"],
 	"description": "Spawns a briefcase in the current channel",
 	dev: true,
+	category: 'btsf',
 	async run(client, message, args) {
 		let data = await client.db.get(`briefcase${message.channel.id}`);
 		if (data) return message.channel.send(`${client.config.emoji.err} There is already a briefcase in this channel! Steal it with \`${message.guild.prefix}steal\``);

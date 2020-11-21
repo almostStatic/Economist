@@ -4,6 +4,7 @@ module.exports = {
 	name: 'disown',
 	aliases: ['disown'],
 	description: 'This **deletes** your pet. **THIS ACTION CAN NOT AND WILL NOT BE UNDONE.**', 
+	category: 'pet',	
 	async run(client, message, args) {
 		const check = await client.db.get('pet' + message.author.id);
 		if (!check) return message.channel.send("How are you going to disown something that you don't own?");

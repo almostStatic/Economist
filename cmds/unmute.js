@@ -4,6 +4,7 @@ module.exports = {
 	name: 'unmute',
 	aliases: ['unmute', 'un-mute'],
 	description: 'unmutes a user.',
+	category: 'mod',
 	async run (client, message, args) {
 		if (!message.member.roles.cache.some(r=>[client.config.roles.mod.trial, client.config.roles.mod.normal].includes(r.id))) {
 			return message.channel.send(`${client.config.emoji.err} You need to be a moderator in order to use this command`)
@@ -45,7 +46,7 @@ module.exports = {
 			.setTimestamp()
 		})
 		member.roles.remove(client.config.roles.muted);
-		await client.db.delete('mute' + usr.id);
+		await client.cdb.delete('mute' + usr.id);
 		await message.channel.send(`${client.config.emoji.tick} ${member.user.tag} has been unmuted and was sent the following message:`)
 		message.channel.send(dm);
 		member.send(dm);

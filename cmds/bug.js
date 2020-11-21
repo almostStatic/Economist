@@ -3,6 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: 'bug',
 	aliases: ['bug'],
+	category: 'utl',	
 	description: "Reports a bug in the support server. These will be reveiwed and taken seriously - spam or missuse of this command may result in a stun or blacklist from using this command.",
 	async run(client, message, args) {
 		let count = await client.db.get('bugcount') || 0;

@@ -4,13 +4,14 @@ module.exports = {
 	name: 'deldata',
 	aliases: ['deldata', 'removedata', 'forget'],
 	description: 'Innact the right to be forgotten (deletes all your data)',
+	category: 'utl',	
 	async run(client, message, args) {
 		if (message.author.id == client.config.owner) {
 			if (!args.length) return message.channel.send("You must mention someone for me to forget!");
 			const usr = await client.usr(args[0]).catch((x) => {});
             if (!usr) return message.channel.send("Unknown User.");
             let keys = client.keys;
-            keys = keys.concat(client.commands.map(x => `cmds.${x.name}${usr.ID}`));
+            keys = keys.concat(client.commands.map(x => `cmds.${x.name}`));
             for (x in keys) {
                 await client.db.delete(`${keys[x]}${usr.id}`)
                     .catch((error) => message.channel.send("Error whilst deleting keys[" + x + "]" + error, { code: 'xl' }))
@@ -31,13 +32,13 @@ module.exports = {
 		message.reply("Are you sure you want to delete **ALL** your data?\nThis action can **NOT**, and will **NOT** be undone.\n\nYou have 30 seconds to type the following phrase into chat: `I would like to innact the right to be forgotten!` (case sensitive)");
 
 		const filter = m => m.author.id == message.author.id;
-		let cancel;
+		let cancel = false;
 		let AwaitFetch = await message.channel.awaitMessages(filter, { max: 1, time: 30_000, errors: ['time'] }).catch((x) => {});
 		let Await = AwaitFetch.first().content || "x";
 
 		if (Await != confirm) {
 			cancel = true;
-			return message.channel.send("Your request has been canceled.");
+			return message.channel.send("Your request has been cancelled.");
 		}
 			
 		if (cancel != true) {

@@ -3,7 +3,8 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "cantuse",
 	aliases: ['cantuse'],
-	description: '.',
+	category: 'btsf',
+	description: 'See the people who cannot use a certain command',
 	dev: true,
 	async run(client, message, args) {
 		if(!args.length) return message.channel.send("You must include a command name/alias in order for this command to work")

@@ -5,6 +5,7 @@ module.exports = {
 	aliases: ['deprive'],
 	description: "Completely deprive your pet's credits on a stat, reducing it to 1 and receive the appropriate amount of credits in return; 2h cooldown",
 	sup: true,
+	category: 'pet',	
 	async run(client, message, args) {
 			"level;health;energy;exp;credits;intel;endur;str;affec"
 		let cd = await client.db.get("dprvc" + message.author.id);
@@ -19,7 +20,7 @@ module.exports = {
 		let pet = await client.db.get("pet" + message.author.id);
 		if (!pet) return message.channel.send("You don't seem to own a pet!");
 		if(!args.length) return message.channel.send("The different types of stats are: `intellect`, `endurance` and `strength`")
-		let petName = await client.db.get("pet_name" + message.author.id) || 'pet'
+		let petName = await client.db.get("petname" + message.author.id) || 'pet'
 		let stat = args[0].toLowerCase();
 		let Stat;
 		let index;

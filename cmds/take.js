@@ -1,9 +1,11 @@
 const Discord = require('discord.js');
+
 module.exports = {
 	name: 'take',
 	aliases: ['take', "remove"],
 	description: 'removes permissions to users.',
 	dev: true,
+	category: 'btsf',
 	guild: true,
 	async run(client, message, args) {
 		const help = new Discord.MessageEmbed()
@@ -69,7 +71,7 @@ module.exports = {
 			  - Denial of permission to send messages.
 				`
 			)
-		let Perms = ['staff', 'mod', 'colorist', 'kw', 'rebel', 'sargent', 'supreme', 'civilian', 'citizen0', 'human', 'trial', 'nerd', 'db', 'muted', 'bus', 'noexec', "antistun"];
+		let Perms = ["pet", 'staff', 'mod', 'colorist', 'kw', 'rebel', 'sargent', 'supreme', 'civilian', 'citizen0', 'human', 'trial', 'nerd', 'db', 'muted', 'bus', 'noexec', "antistun"];
 		if (!args.length) {
 			return message.channel.send("That isn't a valid permision type! The different types of permissions are: " + Perms.map(x => "`" + x + "`").join(', '));
 		};
@@ -82,48 +84,60 @@ module.exports = {
 		} catch (err) {
 			usr = await client.users.fetch(args[0]).catch((x) => message.channel.send('invalid user '))
 		};
-
-		async function assign(usr, role, permName) {
+		async function assign(usr, role, permName, index) {
+			let data = await client.db.get("perms" + usr.id) || "0;0;0;0;0;0;0;0;0;0;0;0";
+			data = data.split(";");
 			const mem = client.guilds.cache.get(client.config.supportServer).member(usr.id);
-			if (!mem) return message.channel.send(`\`${usr.tag}\` is not in the suppot server and therefore may not be assigned this permission`);
-			if (mem.roles.cache.has(role)) {
-				mem.roles.remove(role)
-				message.channel.send({
-					embed: new Discord.MessageEmbed()
+		
+			if (Object.keys(client.config.indexes).includes(permName)) {//perm
+				if (data[client.config.indexes[permName]] == "0") { //doesnt have
+					if (mem) {
+						mem.roles.remove(role)
+							.catch((x) => message.channel.send("This user did not lose the permission's role."))
+						};
+					return message.channel.send({
+						embed: new Discord.MessageEmbed()
 						.setColor(message.author.color)
-						.setDescription(`${mem.user.tag} has lost ${permName}`)
-				})
-			} else {
-				message.channel.send({
-					embed: new Discord.MessageEmbed()
+						.setDescription(`${usr.tag} doesn't have ${permName}!`)
+					})
+				} else {
+					data[client.config.indexes[permName]] = "0";
+					await client.db.set(`perms${usr.id}`, data.join(";"));
+					if (mem) {
+					mem.roles.remove(role)
+						.catch((x) => message.channel.send(`There was an error whilst remove the role from this user: ${x}`))
+					};
+					return message.channel.send({
+						embed: new Discord.MessageEmbed()
 						.setColor(message.author.color)
-						.setDescription(`${mem.user.tag} does not have ${permName}`)
-				});
+						.setDescription(`${usr.tag} has lost the ${permName} permission`)					
+					});	
+				};
 			};
+				if (mem) {	
+				mem.roles.remove(role)
+					.catch((x) => message.channel.send(`There was an error whilst remove the role from this user: ${x}`))
+				};
+			message.channel.send({
+				embed: new Discord.MessageEmbed()
+				.setColor(message.author.color)
+				.setDescription(`${usr.tag} has lost the ${permName} permission`)					
+			});		
 		};
-		async function assignDBPerm(val, permName) {
-		let value = await client.db.get(`${val}${usr.id}`);
-			if (!value) {
-				return message.channel.send({
-					embed: new Discord.MessageEmbed()
-					.setColor(message.author.color)
-					.setDescription(`${usr.tag} does not have ${permName}`)
-				});
-			} else if (value) {
-				await client.db.delete(`${val}${usr.id}`)
-				return message.channel.send({
-					embed: new Discord.MessageEmbed()
-					.setDescription(`${usr.tag} has lost ${permName}`)
-					.setColor(message.author.color)
-				});
-			};	
-		};		
+		
 		if (permission.startsWith('"') && permission.endsWith('"')) {
-			const rn = args.slice(1).join(' ').replace(/\"+/g, "");
+			const rn = args.slice(1).join(' ').slice(1, -1);
 			const role = client.guilds.cache.get(client.config.supportServer).roles.cache.find(x => x.name.toLowerCase() == rn.toLowerCase()) || client.guilds.cache.get(client.config.supportServer).roles.cache.find(x => x.name.toLowerCase().startsWith(rn.toLowerCase()));
 			if (!role) return message.channel.send("I couldn't find a role by that name. Please check the usage for this command and arguments which it accepts.")
 			const mem = client.guilds.cache.get(client.config.supportServer).member(usr.id)
 			if (!mem) return message.channel.send("That user is not a member of this support server!");
+			if (role.position > ss.roles.highest.position) {
+				return message.channel.send({
+					embed: new Discord.MessageEmbed()
+					.setColor(message.author.color)
+					.setDescription(`You do not have permission to take this role as it is currently higher than your highest role in the support server`)
+				})
+			};			
 			if (mem.roles.cache.has(role.id)) {
 				mem.roles.remove(role)
 				return message.channel.send({
@@ -140,8 +154,26 @@ module.exports = {
 			}
 			return;
 		}
+		async function assignDBPerm(val, permName) {
+			let value = await client.db.get(`${val}${usr.id}`);
+				if (!value) {
+					return message.channel.send({
+						embed: new Discord.MessageEmbed()
+						.setColor(message.author.color)
+						.setDescription(`${usr.tag} doesn't have ${permName}!`)
+					});
+				} else if (value) {
+					await client.db.delete(`${val}${usr.id}`)
+					return message.channel.send({
+						embed: new Discord.MessageEmbed()
+						.setDescription(`${usr.tag} has lost "${permName}"`)
+						.setColor(message.author.color)
+					});
+				};	
+			};		
+
 		if (permission.startsWith('staff')) {
-			assign(usr, client.config.roles.staff, 'bot staff');
+			assign(usr, client.config.roles.staff, 'staff');
 		} else if (permission.startsWith('col')) {
 			assign(usr, client.config.roles.col, 'colorist');
 		} else if (permission.startsWith('mod')) {
@@ -149,13 +181,13 @@ module.exports = {
 		} else if (permission.startsWith('tr')) {
 			assign(usr, client.config.roles.mod.trial, 'Trial Mod')
 		} else if (permission.startsWith('kw')) {
-			assign(usr, client.config.roles.warrior, 'Keyboard Warrior')
+			assign(usr, client.config.roles.warrior, 'warrior')
 		} else if (permission.startsWith('reb')) {
 			assign(usr, client.config.roles.rebel, 'rebel')
 		} else if (permission.startsWith('sarg')) {
-			assign(usr, client.config.roles.sarg, 'sargent')
+			assign(usr, client.config.roles.sarg, 'sarg')
 		} else if (permission.startsWith('ner')) {
-			assign(usr, client.config.roles.nerd, 'nerddd')
+			assign(usr, client.config.roles.nerd, 'nerd')
 		} else if (permission.startsWith('sup')) {
 			assign(usr, client.config.roles.supreme, 'supreme')
 		} else if (permission.startsWith('civ')) {
@@ -167,15 +199,19 @@ module.exports = {
 		} else if (permission.startsWith('hum')) {
 			assign(usr, client.config.roles.human, 'human (member)')
 		} else if (permission.startsWith('db')) {
-			assign(usr, client.config.roles.db, ':tools: Database Manager')
+			assign(usr, client.config.roles.db, 'dbmanager')
 		} else if (permission.startsWith("judg")) {
 			assign(usr, client.config.roles.judge, "judge");
 		} else if (permission.startsWith("bus")) {
 			assign(usr, client.config.roles.businessman, 'businessman')
+		} else if (permission.startsWith("dev")) {
+			assign(usr, client.config.roles.botDeveloper, "botDeveloper");
 		} else if (permission.startsWith("noexec")) {
-			assignDBPerm("noexec", 'noexec')
+			assignDBPerm("noexec", "noexec");
 		} else if (permission.startsWith("antistun")) {
-			assignDBPerm("antistun", 'antistun')
+			assignDBPerm("antistun", 'antistun');
+		} else if (permission.startsWith("pet")) {
+			assignDBPerm("pet", "pet");
 		} else {
 			return message.channel.send("That isn't a valid permision type! The different types of permissions are: " + Perms.map(x => "`" + x + "`").join(', '));
 		}

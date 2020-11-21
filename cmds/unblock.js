@@ -4,6 +4,7 @@ module.exports = {
 	name: 'unblock',
 	aliases: ['unblock'],
 	description: "unblocks a user, allowing them to `~dial` you",
+	category: 'phn',
 	async run (client, message, args) {
 		if (!args.length) return message.channel.send(`${client.config.emoji.err} You must specify a user who you wish to unblock!`)
 		let usr;

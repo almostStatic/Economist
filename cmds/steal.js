@@ -2,7 +2,8 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
 	name: 'steal',
-	description: null,
+	description: 'steal a briefcase',
+	category: 'eco',
 	aliases: ['steal'],
 	async run(client, message, args) {
 		let _ = await client.db.get("briefcase" + message.channel.id);

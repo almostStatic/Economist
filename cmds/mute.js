@@ -5,6 +5,7 @@ module.exports = {
 	name: 'mute',
 	aliases: ['mute'],
 	description: 'Mutes a user',
+	category: 'mod',
 	async run(client, message, args) {
 		if (!message.member.roles.cache.some(r=>[client.config.roles.mod.trial, client.config.roles.mod.normal].includes(r.id))) {
 			return message.channel.send(`${client.config.emoji.err} You need to be a moderator in order to use this command`)

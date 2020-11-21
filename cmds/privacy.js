@@ -3,6 +3,7 @@ const rm = require('discord.js-reaction-menu');
 
 module.exports = {
 	name: 'privacy',
+	category: 'utl',
 	aliases: ['privacypolicy', 'privacy', 'pp'],
 	description: "View the privacy policy and how data is handled.",
 	async run(client, message, args) {

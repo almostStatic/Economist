@@ -5,6 +5,7 @@ module.exports = {
 	name: "rules",
 	aliases: ['rules', 'rls', 'rule'],
 	description: 'Displays server rules',
+	category: 'utl',
 	async run(client, message, args) {
 		const em = new MessageEmbed()
     .setTitle("Rules:")

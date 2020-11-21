@@ -6,6 +6,7 @@ module.exports = {
 	name: "sentence",
 	"aliases": ['sentence', 'sente'],
 	judge: true,
+	category: 'ecn',
 	description: 'judge a user, stunning them in `range(4, 10)`',
 	async run(client, message, args) {
 		let coold = await client.db.get(`sentc${message.author.id}`);
@@ -28,9 +29,9 @@ module.exports = {
 			await delay(1000);
 		}
 		if (!args.length) return message.channel.send("You need to ping someone to sentence, dum dum")
-		let user = await client.usr(args[0])
+		let user = await client.usr(args[0]).catch((x) => {});
 		if (!user) return message.channel.send("You need to ping someone to sentence, dum dum");
-		await client.db.set("sentc" + message.author.id, Date.now(), ms('30m'));
+		await client.db.set("sentc" + message.author.id, Date.now());
 		let usercolor = await client.db.get('color' + user.id) || client.config.defaultHexColor;
 		let didntWork = Math.floor(Math.random() * 100);
 
@@ -50,10 +51,7 @@ module.exports = {
 		let stunTime = Math.floor(Math.random() * 10);
 		if (stunTime < 4) stunTime = 4;
 		stunTime *= ms('1m');
-		await client.db.set("stun" + user.id, { 
-			at: message.createdTimestamp,
-			time: stunTime
-		}, stunTime);
+		await client.db.set("stun" + user.id, `${message.createdTimestamp};${stunTime}`);
 		await client.db.set('stunmsg' + user.id, "You can't use any commands while you're in jail! ($time)");
 		await dm(user, usercolor, `After careful consideration, it is decided that ${user.tag} is punishable as a result of their insane ugliness; ${message.author.tag} has won the court case`)
 		await dm(user, usercolor, `:dollar: ${message.author.com == 1 ? amtLost : client.comma(amtLost)} have been moved to ${message.author.tag}'s account since ${user.tag} was unable to win the court case lol`)

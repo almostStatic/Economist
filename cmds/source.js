@@ -5,13 +5,14 @@ const rm = require('discord.js-reaction-menu');
 
 module.exports = {
 	name: 'source',
+	category: 'own',
 	aliases: ['source', 'src'],
 	description: 'view bots source code',
 	async run (client, message, args) {
 		if (message.author.id != client.config.owner) return message.reply('nooooo loool')
 			const command = client.commands.get(args[0].toLowerCase()) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
 		if (!args.length) {
-			return message,channel.send(`${client.config.emoji.err} You need to provide a command name!`);
+			return message.channel.send(`${client.config.emoji.err} You need to provide a command name!`);
 		};
 		cmd = args[0].toLowerCase();
 		fs.readFile(`./cmds/${command.name}.js`, (err, file) => {

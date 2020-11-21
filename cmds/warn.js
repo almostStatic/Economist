@@ -4,6 +4,7 @@ module.exports = {
 	name: 'warn',
 	aliases: ['warn', 'punish'],
 	description: `Warn a user`,
+	category: 'mod',
 	async run(client, message, args) {
 		if (args.length < 2) {
 			return message.channel.send(`${client.config.emoji.err} Incorrect usage; try using \`${message.guild.prefix}warn <user> <reason>\``)

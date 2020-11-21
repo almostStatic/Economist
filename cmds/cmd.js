@@ -3,6 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: 'cmd',
 	aliases: ['cmd'],
+	category: 'btsf',
 	description: 'Revoke/grant permissions for a user to use a certain command',
 	dev: true,
 	async run(client,message,args){

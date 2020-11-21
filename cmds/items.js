@@ -2,7 +2,8 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'items',
-	"aliases": ["inv", "inventory", "stuff", "items", "inventory"],
+	"aliases": ["i", "inventory", "stuff", "items", "inventory"],
+	category: 'ecn',
 	description: "See what items another user has",
 	async run(client, message, args) {
 		let user = await client.usr(args[0] || message.author.id);
@@ -27,15 +28,16 @@ module.exports = {
 			.addField(
 				"Fish",
 				`
-:dolphin: Dolphins - ${message.author.com == 1 ? dolp : client.comma(dolp)}
-:shark: Sharks - ${message.author.com == 1 ? shark : client.comma(shark)}
-:blowfish: Blowfish - ${message.author.com ? blowfish : client.comma(blowfish)}
-:tropical_fish: Tropical Fish - ${message.author.com == 1 ? tropical : client.comma(tropical)}
-:fish: Fish - ${message.author.com == 1 ? fish : client.comma(fish)}
+:dolphin: Dolphins - ${message.author.com == 0 ? dolp : client.comma(dolp)}
+:shark: Sharks - ${message.author.com == 0 ? shark : client.comma(shark)}
+:blowfish: Blowfish - ${message.author.com == 0 ? blowfish : client.comma(blowfish)}
+:tropical_fish: Tropical Fish - ${message.author.com == 0 ? tropical : client.comma(tropical)}
+:fish: Fish - ${message.author.com == 0 ? fish : client.comma(fish)}
 `, true
 			)
 			.addField("Other", `
-${client.config.emoji.chill} Chill Pills - ${message.author.com == 1 ? cp : client.comma(cp)}
+${client.config.emoji.chill} Chill Pills - ${message.author.com == 0 ? cp : client.comma(cp)}
+
 	`, true
 			)
 		})

@@ -7,9 +7,10 @@ module.exports = {
 	usage: '<name of thing to delete(string)>',
 	dev: false,
 	db: true,
+	category: 'btsf',	
 	guild: false,
 	async run(client, message, args) {
-		if (args.length > 2 || !args.length) return message.channel.send("You must specify a user and a key to delete");
+		if (args.length < 2) return message.channel.send("You must specify a user and a key to delete");
 		const user = await client.usr(args[0])
 		let key = args.slice(1).join(' ');
 		if (!key) return message.channel.send("You must provide something to delete under the format of `" + message.guild.prefix + "delete <key>" + '`');
@@ -20,7 +21,7 @@ module.exports = {
 			message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
-				.setDescription(client.config.emoji.tick + " " + key + user.id + " has been deleted.")
+				.setDescription(`Successfully removed ${key}${user.id}`)
 			})
 		} catch (err) {
 			console.error(err);

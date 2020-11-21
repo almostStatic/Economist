@@ -3,7 +3,8 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'rolename',
 	aliases: ["rolename", 'rolename','rn'],
-	desc: "Change the name of your assignable role!",
+	category: 'ecn',
+	description: "Change the name of your assignable role!",
 	async run(client, message, args) {
 		if (message.guild.id != client.config.supportServer) return message.channel.send("This command only works in the support server as a result of how role information is manipulated.");		
 		if (args.length < 2) {

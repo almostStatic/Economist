@@ -3,7 +3,8 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'rolecolor',
 	aliases: ["rolecolor", 'rolecolour','rc'],
-	desc: "Change the color of your assignable role! (for black, use `#000001`)",
+	description: "Change the color of your assignable role! (for black, use `#000001`)",
+	category: 'ecn',
 	usage: 'rolecolor <@role, ID or name> <new hex color>',
 	async run(client, message, args) {
 		if (message.guild.id != client.config.supportServer) return message.channel.send("This command only works in the support server as a result of how role information is manipulated.");		

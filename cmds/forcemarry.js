@@ -5,6 +5,7 @@ module.exports = {
 	aliases: ["forcemarry", "forcem", "fm"],
 	dev: true,
 	description: 'force-marry 2 users.',
+	category: 'btsf',
 	async run(client, message, args) {
 		if (!args.length || (args.length < 2)) {
 			return message.channel.send('You must mention 2 users in order for this command to function correctly!');

@@ -5,6 +5,7 @@ module.exports = {
 	aliases: ['have'],
 	dev: true,
 	description: "See the users who have a specific permission",
+	category: 'btsf',
 	async run (client, message, args) {
 		if (!args.length) return message.channel.send("That isn't a valid permission! The different types of valid permissions are: `db`, `ner`, `civ`, `admin`, `tri`, `mod`, `reb`, `sarg`, `staff`, `cit`, `civ`, `col`, `sup`, `kw` and `mute`");
 		let permission = args[0].toLowerCase();

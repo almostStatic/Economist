@@ -4,8 +4,9 @@ module.exports = {
 	name: 'stroke',
 	aliases: ['stroke', 'str'],
 	description: "Stroke your pet and increase its Affection by 1",
+	category: 'pet',
 	async run(client, message, args) {
-		let cooldown = await client.db.get('strokec' + message.author.id);
+		let cooldown = await client.cdb.get('strokec' + message.author.id);
 		let time = ms('30m');
 		if (cooldown) {
 				const now = Date.now();
@@ -23,13 +24,13 @@ module.exports = {
 		if(affec > 1000) return message.channel.send("Your pet's affection points may not exceed 1000");
 		affec = affec + 1;
 		pet[8] = affec.toString();
-		let petn = await client.db.get(`pet_name${message.author.id}`) || "pet";
+		let petn = await client.db.get(`petname${message.author.id}`) || "pet";
 		await client.db.set(`pet${message.author.id}`, pet.join(';'));
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
 			.setDescription(`:sparkling_heart: ${message.author.tag} has stroked their ${petn}; ${petn}'s affection towards ${message.author.tag} has increaed by one. awe`)
 		});
-		await client.db.set(`strokec${message.author.id}`, Date.now(), ms('30m'));
+		await client.cdb.set(`strokec${message.author.id}`, Date.now(), ms('30m'));
 	}
 }

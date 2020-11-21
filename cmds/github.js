@@ -10,11 +10,9 @@ module.exports = {
 	name: 'github',
 	aliases: ['github', 'git', 'gh'],
 	description: "View a GitHub user stats; 5 seconds cooldown since this uses my personal github access token and I am **NOT** getting myself banned. The exact number of allowed requests will remain unspecified, don't bother asking me.",
+	category: 'utl',
 	async run(client, message, args) {
 		if (!args.length) return message.channel.send("You must specify a query for this command (a username)")
-//		const user = qs.encode(args[0].toLowerCase());
-	//	console.log(args[0])
-		//console.log(user)
 		let res = await fetch(`https://api.github.com/users/${args[0].toLowerCase()}`);
 		if (!res) return message.channel.send("Your search has yielded no results!");
 		res = await res.json();

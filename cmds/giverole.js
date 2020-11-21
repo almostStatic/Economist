@@ -4,6 +4,7 @@ module.exports = {
 	name: 'giverole',
 	aliases: ['giverole', 'gr'],
 	description: "Assigns an assignable role to the mentioned user, only useable by the bot owner.",
+	category: 'own',
 	async run(client, message, args) {
 		if(message.author.id != client.config.owner) return message.channel.send(`${client.config.emoji.err} You don't have permission to use this command! :-(`);
 

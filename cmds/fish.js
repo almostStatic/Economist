@@ -5,10 +5,11 @@ module.exports = {
 	name: 'cast',
 	aliases: ['cast', 'fish'],
 	description: 'Allows you to go fishing!\nCosts :dollar: 50',
+	category: 'ecn',
 	async run(client, message, args) {
 		const fish_rod = await client.db.get('fish_rod' + message.author.id);
 		if (!fish_rod) return message.channel.send(`You need a ${client.config.emoji.fishing_rod} in order to go fishing! \`${message.guild.prefix}shop\``);
-		const cooldown = await client.db.get('fishc' + message.author.id);
+		const cooldown = await client.cdb.get('fishc' + message.author.id);
 		if (cooldown) return message.channel.send("You can only fish once every 20 seconds, otherwise your fishing rod will break!");
 		const fishes = [
 			':dolphin:',
@@ -18,7 +19,7 @@ module.exports = {
 			':fish:',
 		];
 		const bal = await client.db.get('bal' + message.author.id) || 0;
-		await client.db.set('fishc' + message.author.id, Date.now(), 12000);
+		await client.cdb.set('fishc' + message.author.id, Date.now(), 12000);
 		message.channel.send({ embed: new MessageEmbed().setDescription(`${message.author.tag} locates their ${client.config.emoji.fishing_rod} and goes fishing...`).setColor(message.author.color) })
 		await delay(2000);
 		const Fish = Math.floor(Math.random() * fishes.length)

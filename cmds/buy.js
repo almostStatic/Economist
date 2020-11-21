@@ -4,6 +4,7 @@ module.exports = {
 	name: 'buy',
 	aliases: ['buy', 'purchase'],
 	description: "Buy something from the overpriced shop",
+	category: 'ecn',
 	usage: '<item>',
 	dev: false,
 	guild: false,
@@ -40,7 +41,8 @@ module.exports = {
 			await client.db.set('bal' + message.author.id, parseInt(bal - things[T].price))
 			await client.db.set('phone' + message.author.id, true);
 			let phoneNumber = Math.floor(Math.random() * 100000);
-			while (await client.db.get(phoneNumber)) {
+			phoneNumber = Number(phoneNumber)
+			while (await client.db.has("n"+phoneNumber)) {
 				phoneNumber = Math.floor(Math.random() * 100000);
 			}
 			await client.db.set('n' + phoneNumber, message.author.id);

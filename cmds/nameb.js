@@ -5,6 +5,7 @@ module.exports = {
 	aliases: ["nameb", "namebusiness", "name-business"],
 	businessman: true,
 	description: "Rename your business - costs :dollar: 10,000 in legal fees. It's free for the first time, though.",
+	category: 'ecn',
 	async run(client, message, args){
 		let name = args.join(' ');
 		if (!name) {

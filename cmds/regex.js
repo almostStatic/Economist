@@ -5,6 +5,7 @@ module.exports = {
 	aliases: ['regex', 'regexp'],
 	nerd: true,
 	description: 'utilise regexp on a specified test `String`',
+	category: 'nrd',
 	async run(client, message, args) {
 		let msg = await message.channel.send("Testing RegEx...")
 		let regex = new RegExp(args[0]);

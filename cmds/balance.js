@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'balance',
+	category: 'ecn',	
 	aliases: ['balance', 'bal', 'money'],
 	description: "Check someone's balance, see how much money they have",
 	usage: '<User(id | @Mention)>',
@@ -13,11 +14,15 @@ module.exports = {
 		 * Displays the author's balance
 		 */
 			async function authorBal() {
-				const authorBal = await client.db.get('bal' + message.author.id) || 0;
+				let bal = await client.db.get('bal' + message.author.id) || 0;
+				bal = Number(bal)
+				bal = client.noExponents(bal)
+				let sr = client.digits(client.comma(bal), 20)
+
 				message.channel.send({
 				embed: new MessageEmbed()
 				.setColor(message.author.color)
-				.setDescription(`${message.author.tag}'s account contains :dollar: ${message.author.com == 1 ? authorBal : client.comma(authorBal)}`)
+				.setDescription(`${message.author.tag}'s account contains :dollar: ${sr}`)
 			});			
 		};
 		if (!args.length) {
@@ -36,10 +41,13 @@ module.exports = {
 			return authorBal();
 		};
 		bal = await client.db.get('bal' + usr.id) || 0;
+		bal = Number(bal)
+		bal = client.noExponents(bal)
+		let str = client.digits(client.comma(bal), 20)
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)
-			.setDescription(`${usr.tag}'s account contains :dollar: ${message.author.com == 1 ? bal : client.comma(bal)}`)
+			.setDescription(`${usr.tag}'s account contains :dollar: ${str}`)
 		})
 	},
 }

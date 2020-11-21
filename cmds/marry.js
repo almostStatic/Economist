@@ -3,7 +3,8 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: 'marry',
 	aliases: ['marry'],
-	description: '..',
+	description: 'Get yourself a spousey',
+	category: 'ecn',
 	async run(client, message, args) {
 		let spouse = await client.db.get("spouse" + message.author.id);
 		let author, tag;

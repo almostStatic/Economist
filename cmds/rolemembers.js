@@ -4,6 +4,7 @@ module.exports = {
 	name: 'rolemembers',
 	aliases: ['rolemem', 'rolemembers'],
 	description: 'View all the members of a specified role; can be either name mention or ID',
+	category: 'ecn',
 	async run(client, message, args) {
 		if(!args.length) return message.channel.send("You need to like provide a role name/id")
 		const role =  message.guild.roles.cache.find(x => x.name.toLowerCase() == args.join(' ').toLowerCase()) || message.guild.roles.cache.find(x => x.id.toLowerCase() == args.join(' ').toLowerCase()) || message.guild.roles.cache.find(x => x.name.toLowerCase().startsWith(args.join(' ').toLowerCase())) || message.guild.cache.get(message.mentions.roles.first().id);

@@ -5,6 +5,7 @@ const moment = require('moment');
 module.exports = {
 	name: 'uptime',
 	aliases: ['uptime', 'upt'],
+	category: 'utl',
 	description: 'View enhanced uptime info',
 	async run(client, message, args) {
 	var getUptime = function(millis) {
@@ -56,7 +57,6 @@ module.exports = {
 			/*
 			console.log(require('util').inspect(data[7], { depth: 10000000, colors: true }))
 			console.log(err)*/
-			console.log(data, err)
 			const emb = new MessageEmbed()
 			.setColor(message.author.color)
 			.setTitle("Uptime Information")

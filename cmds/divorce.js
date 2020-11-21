@@ -4,6 +4,7 @@ module.exports = {
 	"name": "divorce",
 	aliases: ['divorce', 'div'],
 	description: "Divorce your spouse.",
+	category: 'ecn',	
 	async run(client, message, args) {
 		let spouse = await client.db.get("spouse" + message.author.id);
 		if (!spouse) return message.channel.send("You're not married to anyone yet! `" + message.guild.prefix + "spouse`");

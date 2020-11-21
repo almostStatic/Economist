@@ -3,6 +3,7 @@ const { MessageEmbed, escapeMarkdown } = require('discord.js');
 module.exports = {
 	name: "approve",
 	aliases: ["approve"],
+	category: 'utl',	
 	description: 'approve a bug. All this does is post it in #announcements lol',
 	dev: true,
 	async run(client, message, args) {

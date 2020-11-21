@@ -4,6 +4,7 @@ module.exports = {
 	name: 'upgrade',
 	aliases: ['upgrade', 'improve'],
 	description: `Upgrade one of your pet's stat`,
+	category: 'pet',
 	async run(client, message, args) {
 		let data = await client.db.get("pet" + message.author.id);
 		if (!data) return message.channel.send("You don't have a pet!\n`" + message.guild.prefix + "adopt` to adopt one!")
@@ -21,7 +22,7 @@ module.exports = {
 				return message.channel.send("The different types of stats are: `intellect`, `endurance` and `strength`")
 			}
 		let amt = isNaN(args[1]) ? 1 : Number(args[1]);
-		let name = await client.db.get("pet_name" + message.author.id) || 'their pet';
+		let name = await client.db.get("petname" + message.author.id) || 'their pet';
 		        "level;health;energy;exp;credits;intel;endur;str;affec"
 		let credits = Number(data[4]);
 		if (credits - amt < 0) return message.channel.send("You don't have enough credits for that!");

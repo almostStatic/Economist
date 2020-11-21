@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'role',
 	aliases: ['role'],
+	category: 'ecn',
 	description: "adds/removes a role from someone only if you own an assignable role :D",
 	async run(client, message, args) {
 		if (message.guild.id != client.config.supportServer) return message.channel.send("This command only works in the support server as a result of how role information is manipulated.");

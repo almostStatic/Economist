@@ -4,6 +4,7 @@ module.exports = {
 	name: 'infraction',
 	aliases: ['infraction', 'infract'],
 	description: "Add/remove a user's infractions",
+	category: 'mod',
 	async run(client, message, args) {
 		if (args.length < 3) {
 			return message.channel.send(`${client.config.emoji.err} Incorrect Usage; try using \`${message.guild.prefix}infraction <user> <amount> <+|->\``);

@@ -4,6 +4,7 @@ module.exports = {
 	name: "info",
 	aliases: ['info', 'stats'],
 	description: "View some bot infomation",
+	category: 'utl',
 	async run(client, message, args) {
 		let cmdCount = await client.db.get("cmds") || 0;
 		let cm = await client.db.get('cmds' + message.author.id) || 0;

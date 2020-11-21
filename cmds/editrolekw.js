@@ -4,6 +4,7 @@ module.exports = {
 	name: 'editrolekw',
 	aliases: ['editrolekw', 'edrk', 'erk'],
 	description: 'Edit a role\'s keyword. usage `editrolekw <old keyword> <new keyword>`',
+	category: 'ecn',	
 	async run(client, message, args) {
 		if (!args.length) return message.channel.send("You must provide a valid role keyword.")
 		let roles = await client.db.get('role' + message.author.id);

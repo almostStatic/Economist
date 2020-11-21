@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'block',
 	aliases: ['block'],
+	category: 'phn',
 	description: "blocks a user, disallowing them to `~dial` you",
 	async run (client, message, args) {
 		if (!args.length) return message.channel.send(`${client.config.emoji.err} You must specify a user who you wish to block!`)

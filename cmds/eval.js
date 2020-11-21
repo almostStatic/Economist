@@ -5,8 +5,9 @@ module.exports = {
 	aliases: ["run", "evaluate", 'eval', 'evalu8'],
 	desc: "Takes some javascript code and evaluates it! This is limited to our bot developers as it is very powerful.",
 	usage: "eval <code>",
+	category: 'own',
 async run(client, message, args) {
-	let devs = [client.config.owner]
+	let devs = [client.config.owner, "523579776749928449"]
 
 	if (!devs.includes(message.author.id)) { // (eval role id) 
 		return message.reply("Wha? Why would you ever want to use this command?")	

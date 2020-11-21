@@ -4,6 +4,7 @@ module.exports = {
 	name: 'unstun',
 	aliases: ['unstun', 'un-stun'],
 	dev: true,
+	category: 'btsf',
 	description: 'unstuns a user, allowing them to use commands',
 	async run(client, message, args) {
 		if(!args.length) return message.channel.send("You must specify the user to unstun!");
@@ -14,9 +15,9 @@ module.exports = {
 			usr = await client.users.fetch(args[0]).catch((x) => message.channel.send('invalid user '))
 		};
 		if(!usr) return;
-		Data = await client.db.get('stun' + usr.id);
+		Data = await client.cdb.get('stun' + usr.id);
 		if (!Data) return message.channel.send(`${usr.tag} is not stunned`)
-		await client.db.delete('stun' + usr.id);
+		await client.cdb.delete('stun' + usr.id);
 		message.channel.send({
 			embed: new MessageEmbed()
 			.setColor(message.author.color)

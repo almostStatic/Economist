@@ -3,6 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "business",
 	aliases: ["business"],
+	category: 'ecn',	
 	description: "Shows you stats of your business",
 	async run(client, message, args) {
 		let user = await client.usr(args[0] || message.author.id);

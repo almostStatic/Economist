@@ -5,6 +5,7 @@ module.exports = {
 	aliases: ["reject", "rej"],
 	description: 'Reject a bug, completely disregarding it.',
 	dev: true,
+	category: 'btsf',
 	async run(client, message, args) {
 		if (!args.length) return message.channel.send("You must provide a bug ID of the bug you wish to reject")
 		const id = args[0];

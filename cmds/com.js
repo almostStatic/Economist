@@ -3,6 +3,7 @@ const { MessageEmbed, escapeMarkdown } = require('discord.js');
 module.exports = {
 	name: 'com',
 	aliases: ["com", "comma"],
+	category: 'utl',	
 	description: "Toggle comme separation on/off",
 	async run(client, message, args) {
 		if (message.author.com == 1) {

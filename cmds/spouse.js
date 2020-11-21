@@ -3,6 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "spouse",
 	aliases: ['spouse'],
+	category: 'ecn',
 	description: "See who someone is married to",
 	async run(client, message, args) {
 		if (!args) {

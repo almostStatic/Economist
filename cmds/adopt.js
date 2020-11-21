@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'adopt',
 	aliases: ['adopt', 'getpet'],
+	category: 'pet',	
 	description: 'Adopt a pet! (`~pet`)',
 	async run(client, message, args) {
 		const DATA = await client.db.get('pet' + message.author.id, { raw: true });

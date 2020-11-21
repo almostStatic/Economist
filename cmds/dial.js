@@ -5,12 +5,13 @@ module.exports = {
 	name: 'dial',
 	aliases: ['dial', 'text'],
 	description: "Sends a direct message to the user who's phone number you have included. Requires a phone with a 10 minute cooldown",
+	category: 'phn',	
 	async run(client, message, args) {
 		let lastUsed = await client.db.get('dialc' + message.author.id);
 		let cd = 600000;
 		if (lastUsed) {
 				const now = Date.now();
-				let expirationTime = parseInt(lastUsed) + cd;
+				let expirationTime = Number(lastUsed) + cd;
 				if (now < expirationTime) {
 					let cd = Math.round((expirationTime - now) / ms('1m'));
 					return message.channel.send(`You must wait another ${cd} minutes before texting another user!`)

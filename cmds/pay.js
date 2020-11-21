@@ -4,6 +4,7 @@ require('keyv');
 module.exports = {
 	name: 'pay',
 	aliases: ['pay'],
+	category: 'ecn',
 	description: 'Pay someone else :dollar:\n\nTo pay someone your entire balance, use `all`',
 	usage: 'pay <user> <amount>',
 	dev: false,
@@ -42,10 +43,13 @@ module.exports = {
 			if (message.author.id == usr.id) return message.channel.send(`You can't pay yourself!`);
 			if (!args[1]) return message.channel.send("You must specify the amount of :dollar: you wish to pay " + usr.username);
 		let amt = args[1].toLowerCase();
-		if (amt.startsWith('all')) amt = authorBal;
+		if (amt.toString().startsWith('all')) amt = authorBal;
+    if (amt.toString().startsWith('half')) amt = authorBal / 2;
 		amt = Number(amt);
+		amt = Math.trunc(amt);
+		if (amt < 1) return message.channel.send("You must enter a positive number.");
 		console.log(amt, typeof Number(amt)) // => 10, Number
-		if (isNaN(amt) && (!amt.startsWith('all'))) return message.channel.send("You must provide a valid number! (or just `all`)")
+		if (isNaN(amt) && (!amt.startsWith('all') ||!amt.startsWith('half'))) return message.channel.send("You must provide a valid number! (or just `all`|`half`)")
 		if (authorBal < 0 || (!authorBal) || (Number(authorBal - amt) < 0)) return notEnough();
 		const amountLeft = Number(Number(authorBal) - Number(amt));
 		if (amountLeft < 0) return notEnough();
